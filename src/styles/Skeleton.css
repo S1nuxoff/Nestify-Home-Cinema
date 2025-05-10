@@ -1,0 +1,45 @@
+/* src/components/Skeleton.css */
+
+.skeleton {
+  background-color: var(--gray); /* цвет плейсхолдера */
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Прямоугольник для постера (примерно высота 380px, но регулируйте под нужды) */
+.skeleton-poster {
+  width: 100%;
+  height: 380px;
+}
+
+.skeleton-line {
+  margin: 8px 0;
+}
+
+/* Анимация "шиммер" с более мягкими градиентами и плавной анимацией */
+.skeleton::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.2) 60%,
+    rgba(255, 255, 255, 0.1) 80%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  animation: skeleton-shimmer 1.5s infinite linear;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

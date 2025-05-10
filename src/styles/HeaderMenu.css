@@ -1,0 +1,53 @@
+.header-menu {
+  display: flex;
+  flex-wrap: nowrap; /* не переносим строки */
+  overflow-x: auto; /* разрешаем горизонтальную прокрутку */
+  overflow-y: hidden;
+  white-space: nowrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 32px;
+  align-items: center;
+
+  /* Плавный свайп на iOS */
+  -webkit-overflow-scrolling: touch;
+
+  /* Скрытие полосы прокрутки во всех браузерах */
+  scrollbar-width: none; /* Firefox */
+}
+
+.header-menu::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.header-menu-item {
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-weight: 100;
+}
+.header-menu-item a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 400;
+}
+
+/* Пример стиля для активного пункта */
+.header-menu-items-active a {
+  border: 1px var(--white-opacity-5) solid;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background-color: var(--white-opacity-5);
+  color: var(--white);
+  opacity: 100;
+  font-weight: 500;
+}
+
+/* Если требуется отступ для иконки */
+.header-menu-item-link-icon {
+  margin-right: 4px;
+  fill: var(--white);
+}

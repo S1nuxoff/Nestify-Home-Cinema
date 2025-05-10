@@ -1,0 +1,169 @@
+.player-controls-container {
+  border-radius: 40px;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 100%;
+  align-items: center;
+}
+
+.player-controls-items {
+  display: flex;
+  width: 100%;
+  height: 80px;
+  align-items: center;
+  gap: 32px;
+  justify-content: center;
+}
+
+.player-controls-center {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.player-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.time-label {
+  font-size: 16px;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.seek-bar {
+  flex: 1;
+  cursor: pointer;
+  -webkit-appearance: none;
+  background: none;
+  outline: none;
+  width: 100%;
+  border-radius: 16px;
+  height: 10px;
+}
+
+.seek-bar-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.seek-section {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+}
+
+/* WebKit track */
+.seek-bar::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background-color: transparent;
+  backdrop-filter: blur(4px);
+}
+
+/* WebKit thumb */
+.seek-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--white);
+  cursor: pointer;
+  margin-top: -7px;
+}
+
+/* Firefox track */
+.seek-bar::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background-color: transparent;
+}
+
+/* Firefox thumb */
+.seek-bar::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--white);
+  cursor: pointer;
+}
+
+/* Firefox filled range */
+.seek-bar::-moz-range-progress {
+  background: var(--red);
+  border-radius: 3px;
+  height: 6px;
+}
+
+/* Volume overlay */
+.volume-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(50px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10030;
+  flex-direction: column;
+}
+
+/* Volume slider container */
+.volume-slider {
+  position: relative;
+  width: 130px;
+  height: 400px;
+  border-radius: 32px;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Volume slider background */
+.volume-track-bg {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--white-opacity-20);
+  backdrop-filter: blur(100px);
+}
+
+/* Volume slider bar */
+.volume-track-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: calc(var(--value) * 100%);
+  background: var(--white);
+  border-radius: 32px;
+  transition: height 0.1s;
+}
+
+/* Tooltip for volume */
+.volume-tooltip {
+  position: relative;
+  color: white;
+  font-size: 16px;
+  margin-bottom: 12px;
+  pointer-events: none;
+}
+
+/* Tooltip for scrub preview */
+.tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  pointer-events: none;
+}

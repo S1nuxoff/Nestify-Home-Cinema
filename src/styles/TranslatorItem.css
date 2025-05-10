@@ -1,0 +1,17 @@
+.translator-item {
+  color: var(--white);
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: var(--white-opacity-5);
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Стили для выбранного переводчика */
+.translator-item.selected {
+  background-color: var(--white);
+  color: var(--black);
+}

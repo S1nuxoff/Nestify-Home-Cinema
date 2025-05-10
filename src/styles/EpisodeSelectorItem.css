@@ -1,0 +1,60 @@
+.episode-item__container {
+  width: 100%;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.eposide-item__number {
+  font-size: 32px;
+  color: var(--white);
+  font-weight: 500;
+  width: 24px;
+}
+.episode-item-details-container {
+  width: 100%;
+  background-color: var(--white-opacity-5);
+  padding: 16px 16px;
+  border-radius: 8px;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+}
+.episode-item-title-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.episode-item-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+}
+.episode-item-origin {
+  color: var(--white-gray);
+  font-size: 14px;
+  font-weight: 400;
+}
+.episode-item-date {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--white);
+}
+
+/* --- Добавляем выделение у выбранного эпизода --- */
+.episode-item__container.selected .episode-item-details-container {
+  background-color: var(--white); /* Сам фон */
+}
+
+.episode-item__container.selected
+  .episode-item-details-container
+  .episode-item-title-container
+  .episode-item-title,
+.episode-item__container.selected
+  .episode-item-details-container
+  .episode-item-title-container
+  .episode-item-origin,
+.episode-item__container.selected
+  .episode-item-details-container
+  .episode-item-date {
+  color: var(--dark); /* Цвет текста */
+}
