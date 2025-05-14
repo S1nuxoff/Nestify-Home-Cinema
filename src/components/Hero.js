@@ -5,7 +5,7 @@ import "../styles/Hero.css";
 function Hero() {
   return (
     <div className="herro-container">
-      <Player> </Player>
+      <Player></Player>
     </div>
   );
 }

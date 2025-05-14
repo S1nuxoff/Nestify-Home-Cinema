@@ -1,8 +1,8 @@
 import axios from "axios";
+import config from "../../core/config";
 
-// Создаем экземпляр axios с базовой конфигурацией
 const apiClient = axios.create({
-  baseURL: "http://192.168.0.15:8000/api/v1/rezka/",
+  baseURL: `${config.backend_url}/api/v1/rezka/`,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -22,16 +22,17 @@ export const getPage = async (link) => {
   }
 };
 
-export const getWatchHistory = async () => {
+export const getWatchHistory = async (user_id) => {
   try {
-    const response = await apiClient.get("get_watch_history", {});
+    const response = await apiClient.get("get_watch_history", {
+      params: { user_id },
+    });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-// Функция для поиска
 export const search = async (query) => {
   try {
     const response = await apiClient.get("search", {
@@ -43,7 +44,6 @@ export const search = async (query) => {
   }
 };
 
-// Функция для получения детальной информации о фильме по filmLink
 export const getMovie = async (filmLink) => {
   try {
     const response = await apiClient.get("get_movie", {

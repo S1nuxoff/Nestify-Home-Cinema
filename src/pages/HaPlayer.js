@@ -1,10 +1,12 @@
 import React from "react";
-import Player from "../components/Player";
+import KodiLiveSessionPlayer from "../components/KodiLiveSessionPlayer";
 
 function HaPlayer({ onMovieSelect }) {
   return (
     <div>
-      <Player onMovieSelect={onMovieSelect}></Player>
+      <KodiLiveSessionPlayer
+        onMovieSelect={onMovieSelect}
+      ></KodiLiveSessionPlayer>
     </div>
   );
 }

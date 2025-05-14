@@ -129,3 +129,74 @@ header {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.header-user__container {
+  position: relative;
+}
+.header-user__avatar-container {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  border-radius: 32px;
+}
+.header-user__avatar {
+  border-radius: 32px;
+  border: 2px solid var(--white-opacity-70);
+}
+
+.dropdown-users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.dropdown-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 6px;
+  transition: background 0.2s ease;
+}
+
+.dropdown-user:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.dropdown-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.dropdown-button {
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  padding: 8px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdown-button.logout {
+  color: #f55;
+}
+
+.header-user__dropdown.under-avatar {
+  position: absolute;
+  top: calc(100% + 8px); /* нижче аватара */
+  right: 0;
+  background: var(--dark);
+  border: 1px solid var(--white-opacity-30);
+  border-radius: 12px;
+  padding: 12px;
+  z-index: 999;
+  min-width: 220px;
+}
+
+.header-dropdown__user-name {
+  color: var(--white);
+}

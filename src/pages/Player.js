@@ -1,15 +1,31 @@
-import React from "react";
+import { useLocation, useParams } from "react-router-dom";
 import ReactPlayer from "react-player";
-import "../styles/Player.css";
+import CustomPlayer from "../components/CustomPlayer";
+import config from "../core/config";
+const Player = () => {
+  const { state } = useLocation();
+  const { movieId } = useParams();
 
-function Player() {
+  const movieDetails = state?.movieDetails;
+  const movie_url = state?.movie_url;
+  const proxyUrl = `${config.backend_url}/proxy?url=${movie_url}`;
+  console.log(movie_url);
+  if (!movieDetails || !movie_url) {
+    return <p>Дані відсутні. Можливо, сторінку було відкрито напряму.</p>;
+  }
+
   return (
-    <ReactPlayer
-      url="https://stream.voidboost.cc/9287b73bab2a92bdfeed287dd3c99fc3:2025051110:YXFBYlpCRUN4bUsvQ20xZjlZNSs0WWNxRjNzbjZaczU1TTQ4Z0tkTUVWZUpYaXNQS1hmVE8wR0FwYnlualVWQkxMQWc2M04xVW56OW5zay9lR2N3dGc9PQ==/1/2/7/1/1/3/5/h9col.mp4"
-      controls
-      className="react-player"
-    />
+    <div className="web-player-container">
+      <ReactPlayer
+        url={proxyUrl}
+        controls
+        playing
+        width="100%"
+        height="100%"
+        style={{ position: "absolute", top: 0, left: 0 }}
+      />
+    </div>
   );
-}
+};
 
 export default Player;

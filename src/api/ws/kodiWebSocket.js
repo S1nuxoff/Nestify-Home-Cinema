@@ -1,6 +1,5 @@
-// file: src/kodiWebSocket.js
+import config from "../../core/config";
 
-// (Опционально) небольшая упрощённая шина событий (EventEmitter)
 class Emitter {
   constructor() {
     this.handlers = {};
@@ -24,9 +23,7 @@ class Emitter {
 }
 
 const emitter = new Emitter();
-
-// URL, куда подключаемся
-const KODI_WS_URL = "ws://192.168.0.44:9090/jsonrpc";
+const KODI_WS_URL = config.kodi_url;
 
 const kodiWebSocket = {
   ws: null,
@@ -116,7 +113,7 @@ const kodiWebSocket = {
       emitter.emit("playerIdChange", this.playerId);
 
       // Отправка HTTP-запроса при остановке плеера
-      fetch("http://192.168.0.15:8000/api/v1/session/remove", {
+      fetch(`${config.backend_url}/api/v1/session/remove`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

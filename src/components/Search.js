@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
 import "../styles/Header.css";
-
+import config from "../core/config";
 function Search({ onSearch, onMovieSelect }) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -19,9 +19,9 @@ function Search({ onSearch, onMovieSelect }) {
 
     debounceTimeoutRef.current = setTimeout(() => {
       fetch(
-        `http://192.168.0.15:8000/api/v1/rezka/get_search?title=${encodeURIComponent(
-          query
-        )}`
+        `${
+          config.backend_url
+        }/api/v1/rezka/get_search?title=${encodeURIComponent(query)}`
       )
         .then((res) => res.json())
         .then((data) => setSuggestions(data.results || []))

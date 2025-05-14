@@ -1,30 +1,44 @@
 // src/components/MoviePopup.js
 import React, { useState, useEffect } from "react";
+import ReactPlayer from "react-player";
 import { ReactComponent as StarIcon } from "../assets/icons/star.svg";
 import { ReactComponent as CloseIcon } from "../assets/icons/close.svg";
 import { ReactComponent as PlayIcon } from "../assets/icons/play.svg";
 import { ReactComponent as DropIcon } from "../assets/icons/drop-down.svg";
 import { ReactComponent as VolumeMute } from "../assets/icons/volume-mute.svg";
 import { ReactComponent as VolumeOne } from "../assets/icons/volume-one.svg";
-import ReactPlayer from "react-player/youtube";
+import { SkeletonLine, SkeletonPoster } from "./Skeleton";
+import { createSession } from "../api/session";
 import TranslatorItem from "./TranslatorItem";
 import EpisodeSelectorItem from "./EpisodeSelectorItem";
-import { SkeletonLine, SkeletonPoster } from "./Skeleton";
-import useMovieDetails from "../hooks/useMovieDetails";
 import useMovieSource from "../hooks/useMovieSource";
+import { getMovieStreamUrl } from "../api/hdrezka/getMovieStreamUrl";
 import "../styles/MoviePopup.css";
+import { useNavigate } from "react-router-dom";
+import { addMovieToHistory } from "../api/user";
 
-const MoviePopup = ({ movie, onClose }) => {
+const MoviePopup = ({
+  currentUser,
+  movie = null,
+  onClose,
+  loading,
+  movieDetails,
+}) => {
   const [selectedTranslatorId, setSelectedTranslatorId] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState(null);
   const [isSeasonDropdownOpen, setIsSeasonDropdownOpen] = useState(false);
   const [selectedEpisode, setSelectedEpisode] = useState(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
+  const { playMovieSource } = useMovieSource();
+  const [browserUrl, setBrowserUrl] = useState(null);
+
+  const navigate = useNavigate();
   const toggleMute = () => {
     setIsMuted(!isMuted);
     setIsVisible(!isVisible);
   };
+
   useEffect(() => {
     if (movie?.translator_id) {
       setSelectedTranslatorId(movie.translator_id);
@@ -38,7 +52,7 @@ const MoviePopup = ({ movie, onClose }) => {
   }, [movie]);
 
   useEffect(() => {
-    if (movie) {
+    if (movieDetails) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -46,24 +60,15 @@ const MoviePopup = ({ movie, onClose }) => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [movie]);
+  }, [movieDetails]);
 
-  // Загружаем детали фильма через кастомный хук
-  const { movieDetails, loading } = useMovieDetails(
-    movie?.filmLink || movie?.link
-  );
-
-  // По умолчанию выбираем первый сезон, если есть расписание эпизодов
   useEffect(() => {
     if (!loading && movieDetails?.episodes_schedule?.length > 0) {
       setSelectedSeason(movieDetails.episodes_schedule[0].season_number);
     }
   }, [loading, movieDetails]);
 
-  // Получаем функцию для воспроизведения источника через хук
-  const { playMovieSource } = useMovieSource();
-
-  const handlePlayUrl = async () => {
+  const handlePlayKodi = async () => {
     const success = await playMovieSource({
       seasonId: selectedSeason,
       episodeId: selectedEpisode,
@@ -71,23 +76,46 @@ const MoviePopup = ({ movie, onClose }) => {
       translatorId: selectedTranslatorId,
       action: movieDetails.action,
     });
+    console.log(success);
     if (success) {
       setSelectedTranslatorId(null);
       setSelectedSeason(null);
       setSelectedEpisode(null);
       onClose();
-      await fetch("http://192.168.0.15:8000/api/v1/session/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      await createSession(currentUser.id, {
+        movie_id: movieDetails.id,
+        position: 0,
+        translator_id: selectedTranslatorId,
+        season_id: selectedSeason,
+        episode_id: selectedEpisode,
+      });
+    }
+  };
+
+  const handlePlayBrowser = async () => {
+    const movie_url = await getMovieStreamUrl({
+      seasonId: selectedSeason,
+      episodeId: selectedEpisode,
+      movieId: movieDetails.id,
+      translatorId: selectedTranslatorId,
+      action: movieDetails.action,
+    });
+
+    if (movie_url) {
+      await addMovieToHistory({
+        user_id: currentUser.id,
+        season_id: selectedSeason,
+        episode_id: selectedEpisode,
+        movie_id: movieDetails.id,
+        translator_id: selectedTranslatorId,
+        action: movieDetails.action,
+        position: 0,
+      });
+      navigate(`/player/${movieDetails.id}`, {
+        state: {
+          movieDetails,
+          movie_url,
         },
-        body: JSON.stringify({
-          movie_id: movieDetails.id,
-          position: 0,
-          translator_id: selectedTranslatorId,
-          season_id: selectedSeason,
-          episode_id: selectedEpisode,
-        }),
       });
     }
   };
@@ -106,11 +134,10 @@ const MoviePopup = ({ movie, onClose }) => {
     setSelectedEpisode(episodeNumber);
   };
 
-  if (!movie) return null;
-  console.log(movieDetails);
+  if (!movieDetails) return null;
+
   return (
     <>
-      {" "}
       <div className="movie-modal__overlay" onClick={onClose}></div>
       <div className="movie-modal-wrapper" onClick={onClose}>
         <div className="movie-modal" onClick={(e) => e.stopPropagation()}>
@@ -184,11 +211,19 @@ const MoviePopup = ({ movie, onClose }) => {
                       </span>
                     </div>
                     <div className="movie-modal__controls">
-                      <div
-                        className="movie-modal__play-button"
-                        onClick={handlePlayUrl}
-                      >
-                        <PlayIcon /> Play
+                      <div className="movie-modal_controls-play-btn">
+                        <div
+                          className="movie-modal__play-button"
+                          onClick={handlePlayBrowser}
+                        >
+                          <PlayIcon /> Play
+                        </div>
+                        <div
+                          className="movie-modal__play-button"
+                          onClick={handlePlayKodi}
+                        >
+                          <PlayIcon /> Play Kodi
+                        </div>
                       </div>
                       {movieDetails?.trailer && (
                         <div
@@ -251,6 +286,18 @@ const MoviePopup = ({ movie, onClose }) => {
                   </div>
                 </div>
                 <div className="movie-modal__details">
+                  {browserUrl && (
+                    <div className="movie-modal__browser-player-container">
+                      <ReactPlayer
+                        url={browserUrl}
+                        controls
+                        playing
+                        width="100%"
+                        height="100%"
+                        style={{ borderRadius: "12px", overflow: "hidden" }}
+                      />
+                    </div>
+                  )}
                   <div className="movie-modal__details-container">
                     <div className="movie-modal__details-top">
                       <span className="movie-modal__release-date">
@@ -448,7 +495,6 @@ const MoviePopup = ({ movie, onClose }) => {
         </div>
       </div>
     </>
-    // </div>
   );
 };
 

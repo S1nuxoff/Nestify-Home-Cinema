@@ -1,7 +1,7 @@
 // HDrezka.js
 import React, { useState, useEffect } from "react";
 import Explorer from "../components/Explorer";
-import HeaderHDrezka from "../components/HeaderHDrezka";
+import Header from "../components/Header";
 import { getPage, search } from "../api/htttp/hdrezka";
 import Player from "../components/Player";
 
@@ -40,7 +40,7 @@ function SeriesPage({ onMovieSelect }) {
 
   return (
     <div className="container">
-      <HeaderHDrezka onSearch={handleSearch} onMovieSelect={onMovieSelect} />
+      <Header onSearch={handleSearch} onMovieSelect={onMovieSelect} />
       <Player onMovieSelect={onMovieSelect}></Player>
       <Explorer Page={page} title={"Series"} onMovieSelect={onMovieSelect} />
     </div>
