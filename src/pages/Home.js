@@ -14,7 +14,7 @@ import KodiLiveSessionPlayer from "../components/KodiLiveSessionPlayer";
 import WatchHistory from "../components/WatchHistory";
 import MovieCardSwiper from "../components/MovieCardSwiper";
 import MoviePopup from "../components/MoviePopup";
-
+import CollectionsSwiper from "../components/CollectionsSwiper";
 import useLiveSession from "../hooks/useLiveSession";
 import useMovieDetails from "../hooks/useMovieDetails";
 
@@ -27,12 +27,10 @@ function Home({ currentUser }) {
   const [categories, setCategories] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [activeHeroIdx, setActiveHeroIdx] = useState(0);
-
   /* ───────── loading flags ───────── */
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
-
   /* ───────── hooks ───────── */
   const session = useLiveSession();
   const { movieDetails, loading: movieLoading } = useMovieDetails(
@@ -146,22 +144,24 @@ function Home({ currentUser }) {
           />
         )}
 
-        {/* Головний контент */}
         <div className="home-page-content">
-          {/* Watch history */}
           {!isHistoryLoading && history.length > 0 && (
             <WatchHistory onMovieSelect={handleMovieSelect} history={history} />
           )}
 
-          {/* Свайпери з категорій — тільки коли mainPage завантажено */}
           {!isPageLoading && (
             <>
+              <CollectionsSwiper
+                title="Browse by Collectins"
+                data={page.collections}
+              />
               <MovieCardSwiper
                 navigate_to="/new"
                 data={page.newest}
                 onMovieSelect={handleMovieSelect}
                 title="New Releases"
               />
+
               <MovieCardSwiper
                 navigate_to="?filter=popular"
                 data={page.popular}

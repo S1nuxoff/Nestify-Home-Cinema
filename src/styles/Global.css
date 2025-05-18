@@ -112,24 +112,10 @@ body {
   --blue: #0a84ff;
 }
 
-/* .body-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.3;
-  filter: blur(200px);
-  max-height: 600px;
-  z-index: -1;
-  background-size: cover;
-  background-repeat: no-repeat;
-} */
-
 .background-glow-center-green {
   width: 200px;
   height: 200px;
-  background-color: var(--green);
+  background-color: var(--blue);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -137,7 +123,7 @@ body {
   z-index: -2;
   opacity: 0.2;
 }
-/* .background-blur-100 {
+.background-blur-100 {
   width: 100%;
   height: 100%;
   z-index: -1;
@@ -146,7 +132,7 @@ body {
   background-color: rgba(0, 0, 0, 0.1);
   top: 0;
   left: 0;
-} */
+}
 .body-backdrop {
   position: absolute; /* 👈 fixed — чтобы не зависело от родителя */
   top: 0;
@@ -398,7 +384,7 @@ body {
 
 @media (max-width: 530px) {
   .video-card-preview-wrapper {
-    height: 180px; /* Устанавливаем высоту блока */
+    height: 120px;
   }
 }
 @media (max-width: 450px) {
@@ -424,6 +410,11 @@ body {
   }
   .player-container {
     height: 440px;
+  }
+  @media (max-width: 530px) {
+    .video-card-preview-wrapper {
+      height: 100px;
+    }
   }
 }
 .video-js {

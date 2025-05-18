@@ -1,5 +1,6 @@
 .video-card-container {
   cursor: pointer;
+  width: auto;
 }
 
 /* .video-card-overlay {
@@ -28,8 +29,9 @@
   height: 100%; /* Картинка займет всю высоту контейнера */
   object-fit: cover; /* Картинка будет растягиваться, заполняя контейнер, с сохранением пропорций */
   object-position: center; /* Картинка будет выровнена по центру */
-  border-radius: 16px;
+  border-radius: 8px;
   transition: 0.2s ease-in-out;
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.25);
 }
 .video-card-meta {
   display: flex;

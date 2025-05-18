@@ -14,10 +14,11 @@ function WatchHistory({ onMovieSelect, history }) {
         spaceBetween={10}
         centeredSlides={false}
         breakpoints={{
-          480: { slidesPerView: 2.1 },
-          768: { slidesPerView: 3.1 },
-          1024: { slidesPerView: 4.1 },
-          1280: { slidesPerView: 5.1 },
+          0: { slidesPerView: 2.2 },
+          480: { slidesPerView: 2.2 },
+          768: { slidesPerView: 3 },
+          1024: { slidesPerView: 4 },
+          1280: { slidesPerView: 5 },
         }}
       >
         {history &&

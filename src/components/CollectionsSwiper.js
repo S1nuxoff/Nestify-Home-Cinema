@@ -1,13 +1,11 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useNavigate } from "react-router-dom";
-import VideoCard from "./VideoCard";
-import { ReactComponent as ArrowRightIcon } from "../assets/icons/arrow-right.svg";
-
+import CollectionCard from "./CollectionCard";
 import "swiper/css";
 import "../styles/MovieCardSwiper.css";
 
-function MovieCardSwiper({ onMovieSelect, data, title, navigate_to }) {
+function CollectionsSwiper({ data, title, navigate_to }) {
   const navigate = useNavigate();
 
   return (
@@ -20,7 +18,6 @@ function MovieCardSwiper({ onMovieSelect, data, title, navigate_to }) {
         }}
       >
         <span className="row-header-title">{title}</span>
-        <ArrowRightIcon className="arrow-right-icon" />
       </div>
 
       <Swiper
@@ -33,9 +30,9 @@ function MovieCardSwiper({ onMovieSelect, data, title, navigate_to }) {
           1280: { slidesPerView: 5 },
         }}
       >
-        {data?.map((movie) => (
-          <SwiperSlide key={movie.id}>
-            <VideoCard movie={movie} onMovieSelect={onMovieSelect} />
+        {data?.map((collection) => (
+          <SwiperSlide key={collection.id}>
+            <CollectionCard collection={collection} />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -43,4 +40,4 @@ function MovieCardSwiper({ onMovieSelect, data, title, navigate_to }) {
   );
 }
 
-export default MovieCardSwiper;
+export default CollectionsSwiper;

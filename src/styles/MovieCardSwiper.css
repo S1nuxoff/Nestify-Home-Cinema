@@ -1,11 +1,10 @@
-.movie_card_swiper-container {
-  margin-top: 0px;
-  position: relative;
-  border-bottom: 1px solid var(--white-opacity-10);
-  padding-bottom: 32px;
+.movie_card_swiper-container:not(:last-child) {
+  /* border-bottom: 1px solid var(--white-opacity-5);
+  padding-bottom: 20px; */
 }
-.movie_card_swiper {
-  border-bottom: 1px solid var(--white-opacity-10);
+.explorer_watch-history {
+  /* border-bottom: 1px solid var(--white-opacity-5);
+  padding-bottom: 20px; */
 }
 
 .movie_card_swiper_title-container {
@@ -16,6 +15,7 @@
   height: 24px;
   transition: 0.2s ease-in-out;
   cursor: pointer;
+  margin: 14px 0px;
 }
 
 .arrow-right-icon {
@@ -27,8 +27,3 @@
   transition: 0.2s ease-in-out;
   opacity: 1;
 } */
-
-.explorer_watch-history {
-  border-bottom: 1px solid var(--white-opacity-10);
-  padding-bottom: 32px;
-}

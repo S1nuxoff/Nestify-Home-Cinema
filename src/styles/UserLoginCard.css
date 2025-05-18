@@ -7,24 +7,24 @@
 }
 
 .user-login__avatar-container {
-  border-radius: 24px;
+  border-radius: 50%;
   overflow: hidden;
   width: 150px;
   height: 150px;
   display: flex;
-  transition: 0.1s ease-in;
+  transition: 0.2s ease-in;
 }
 .user-login-name {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--white-gray);
-  transition: 0.1s ease-in;
+  transition: 0.2s ease-in;
 }
 .user-login__avatar-container:hover {
-  border: 5px solid var(--white);
-  transition: 0.1s ease-in;
+  border: 5px solid var(--blue);
+  transition: 0.2s ease-in;
 }
 .user-login__container:hover .user-login-name {
   color: var(--white);
-  transition: 0.1s ease-in;
+  transition: 0.2s ease-in;
 }
