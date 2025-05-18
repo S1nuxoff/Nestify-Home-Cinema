@@ -1,47 +1,43 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
+import { useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 import config from "../core/config";
-function Search({ onSearch, onMovieSelect }) {
+
+function Search({ onMovieSelect }) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
   const debounceTimeoutRef = useRef(null);
+  const navigate = useNavigate(); // ⬅️ роутер
 
+  /* автодополнение */
   useEffect(() => {
     if (!query.trim()) {
       setSuggestions([]);
       return;
     }
-
     clearTimeout(debounceTimeoutRef.current);
-
     debounceTimeoutRef.current = setTimeout(() => {
       fetch(
         `${
           config.backend_url
         }/api/v1/rezka/get_search?title=${encodeURIComponent(query)}`
       )
-        .then((res) => res.json())
-        .then((data) => setSuggestions(data.results || []))
-        .catch((err) => {
-          console.error("Search fetch error:", err);
-          setSuggestions([]);
-        });
+        .then((r) => r.json())
+        .then((d) => setSuggestions(d.results || []))
+        .catch(() => setSuggestions([]));
     }, 500);
-
     return () => clearTimeout(debounceTimeoutRef.current);
   }, [query]);
 
-  const handleInputChange = (e) => {
-    setQuery(e.target.value);
-  };
-
+  /* отправка формы → переход на /search */
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!query.trim()) return;
-    onSearch(query);
+    const q = query.trim();
+    if (!q) return;
+    navigate(`/search?query=${encodeURIComponent(q)}`); // ⬅️ переход
     setSuggestions([]);
     inputRef.current?.blur();
   };
@@ -56,7 +52,7 @@ function Search({ onSearch, onMovieSelect }) {
           className="hdrezka-header-search-input"
           placeholder="Search movies, tv shows..."
           value={query}
-          onChange={handleInputChange}
+          onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
         />
@@ -64,8 +60,8 @@ function Search({ onSearch, onMovieSelect }) {
 
       {isFocused && suggestions.length > 0 && (
         <ul className="search-suggestions">
-          {suggestions.map((item, index) => (
-            <li key={index} onClick={() => onMovieSelect(item)}>
+          {suggestions.map((item, idx) => (
+            <li key={idx} onClick={() => onMovieSelect(item)}>
               <strong className="search-title">{item.title}</strong>
               <div className="search-description">{item.description}</div>
             </li>

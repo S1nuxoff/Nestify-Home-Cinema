@@ -1,117 +1,189 @@
 import React, { useState, useEffect } from "react";
+import {
+  getPage,
+  search,
+  getCategories,
+  getMainPage,
+  getWatchHistory,
+} from "../api/htttp/hdrezka";
+
 import Explorer from "../components/Explorer";
 import Header from "../components/Header";
-import { getPage, search } from "../api/htttp/hdrezka";
-import { getWatchHistory } from "../api/htttp/hdrezka";
-import KodiLiveSessionPlayer from "../components/KodiLiveSessionPlayer.js";
-import useLiveSession from "../hooks/useLiveSession";
 import HeroSwiper from "../components/HeroSwiper";
-import WatchHistory from "../components/WatchHistory.js";
+import KodiLiveSessionPlayer from "../components/KodiLiveSessionPlayer";
+import WatchHistory from "../components/WatchHistory";
+import MovieCardSwiper from "../components/MovieCardSwiper";
 import MoviePopup from "../components/MoviePopup";
+
+import useLiveSession from "../hooks/useLiveSession";
 import useMovieDetails from "../hooks/useMovieDetails";
-import config from "../core/config.js";
+
+import "../styles/HomePage.css";
 
 function Home({ currentUser }) {
-  const [page, setPage] = useState([]);
+  /* ───────── state ───────── */
+  const [page, setPage] = useState({});
   const [history, setHistory] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const session = useLiveSession();
+  const [activeHeroIdx, setActiveHeroIdx] = useState(0);
 
-  const { movieDetails, loading } = useMovieDetails(
+  /* ───────── loading flags ───────── */
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
+
+  /* ───────── hooks ───────── */
+  const session = useLiveSession();
+  const { movieDetails, loading: movieLoading } = useMovieDetails(
     selectedMovie?.filmLink || selectedMovie?.link
   );
 
-  const handleMovieSelect = (movie) => {
-    setSelectedMovie(movie);
-  };
-
-  const closePopup = () => {
-    setSelectedMovie(null);
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getPage(config.hdrezk_url);
-        setPage(data);
-      } catch (error) {
-        console.error("Error fetching main page data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getWatchHistory(currentUser.id);
-        setHistory(data);
-      } catch (error) {
-        console.error("Error fetching main page data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  /* ───────── handlers ───────── */
+  const handleMovieSelect = (movie) => setSelectedMovie(movie);
+  const closePopup = () => setSelectedMovie(null);
 
   const handleSearch = async (query) => {
-    if (query.trim() === "") {
-      try {
-        const data = await getPage();
-        setPage(data);
-      } catch (error) {
-        console.error("Error fetching main page data:", error);
+    try {
+      if (query.trim() === "") {
+        setIsPageLoading(true);
+        setPage(await getPage());
+      } else {
+        setIsPageLoading(true);
+        setPage(await search(query));
       }
-    } else {
-      try {
-        const data = await search(query);
-        setPage(data);
-      } catch (error) {
-        console.error("Error fetching search data:", error);
-      }
+    } catch (err) {
+      console.error("search error:", err);
+    } finally {
+      setIsPageLoading(false);
     }
   };
 
+  /* ───────── effects ───────── */
+  useEffect(() => {
+    (async () => {
+      try {
+        setPage(await getMainPage());
+      } catch (e) {
+        console.error("getMainPage error:", e);
+      } finally {
+        setIsPageLoading(false);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setCategories((await getCategories()).categories || []);
+      } catch (e) {
+        console.error("getCategories error:", e);
+      } finally {
+        setIsCategoriesLoading(false);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setHistory(await getWatchHistory(currentUser.id));
+      } catch (e) {
+        console.error("getWatchHistory error:", e);
+      } finally {
+        setIsHistoryLoading(false);
+      }
+    })();
+  }, [currentUser.id]);
+
+  /* ───────── UI ───────── */
   return (
     <>
+      {/* задній фон для Hero */}
+      {history.length > 0 && (
+        <div
+          className="body-backdrop"
+          style={{
+            backgroundImage: history[activeHeroIdx]?.image
+              ? `url(${history[activeHeroIdx].image})`
+              : "none",
+          }}
+        />
+      )}
+
+      {/* popup з деталями */}
       {selectedMovie && (
         <MoviePopup
-          loading={loading}
+          loading={movieLoading}
           movieDetails={movieDetails}
           currentUser={currentUser}
           movie={selectedMovie}
           onClose={closePopup}
         />
       )}
+
       <div className="container">
         <Header
+          categories={categories}
           currentUser={currentUser}
           onSearch={handleSearch}
           onMovieSelect={handleMovieSelect}
         />
-        {!session || !session.id ? (
-          <HeroSwiper
-            onMovieSelect={handleMovieSelect}
-            history={history}
-          ></HeroSwiper>
-        ) : (
+
+        {/* Hero або Live-session */}
+        {session?.id ? (
           <KodiLiveSessionPlayer
             session={session}
             history={history}
             currentUser={currentUser}
             onMovieSelect={handleMovieSelect}
-          ></KodiLiveSessionPlayer>
+          />
+        ) : (
+          <HeroSwiper
+            onMovieSelect={handleMovieSelect}
+            history={history}
+            onActiveIndexChange={setActiveHeroIdx}
+          />
         )}
-        {history ? (
-          <WatchHistory onMovieSelect={handleMovieSelect} history={history} />
-        ) : null}
 
-        <Explorer
-          history={history}
-          currentUser={currentUser}
-          Page={page}
-          title={"Popular"}
-          onMovieSelect={handleMovieSelect}
-        />
+        {/* Головний контент */}
+        <div className="home-page-content">
+          {/* Watch history */}
+          {!isHistoryLoading && history.length > 0 && (
+            <WatchHistory onMovieSelect={handleMovieSelect} history={history} />
+          )}
+
+          {/* Свайпери з категорій — тільки коли mainPage завантажено */}
+          {!isPageLoading && (
+            <>
+              <MovieCardSwiper
+                navigate_to="/new"
+                data={page.newest}
+                onMovieSelect={handleMovieSelect}
+                title="New Releases"
+              />
+              <MovieCardSwiper
+                navigate_to="?filter=popular"
+                data={page.popular}
+                onMovieSelect={handleMovieSelect}
+                title="Popular"
+              />
+              <MovieCardSwiper
+                navigate_to="?filter=watching"
+                data={page.watching}
+                onMovieSelect={handleMovieSelect}
+                title="Watching"
+              />
+            </>
+          )}
+
+          {/* Простий спінер як заглушка (можеш замінити на Skeleton) */}
+          {isPageLoading && (
+            <div className="spinner-wrapper">
+              <div className="spinner" />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

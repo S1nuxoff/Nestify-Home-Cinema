@@ -3,12 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@capacitor/android": "^7.2.0",
+    "@capacitor/cli": "^7.2.0",
+    "@capacitor/core": "^7.2.0",
+    "@capacitor/ios": "^7.2.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
+    "@videojs/http-streaming": "^3.17.0",
     "axios": "^1.8.3",
     "cheerio": "^1.0.0",
+    "dayjs": "^1.11.13",
     "flubber": "^0.4.2",
     "framer-motion": "^12.9.4",
     "js-base64": "^3.7.7",
@@ -24,6 +30,7 @@
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.8.1",
     "swiper": "^11.2.6",
+    "video.js": "^8.22.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

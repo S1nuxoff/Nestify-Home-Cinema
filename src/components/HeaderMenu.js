@@ -1,32 +1,64 @@
-// HeaderMenu.jsx
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/HeaderMenu.css";
 
-function HeaderMenu({ onMenuSelect }) {
+function HeaderMenu({ categories = [], onMenuSelect }) {
+  const navigate = useNavigate();
+  const nav = useNavigate();
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const menuRef = useRef();
+
+  const go = (url) => {
+    if (onMenuSelect) onMenuSelect(url);
+    else nav(url);
+  };
+
+  // Закриття при кліку поза меню
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
   return (
-    <ul className="header-menu">
-      <li
-        className="header-menu-item header-menu-items-active"
-        onClick={() => onMenuSelect("home")}
-      >
-        <a href="/">Home</a>
-      </li>
-      <li className="header-menu-item" onClick={() => onMenuSelect("films")}>
-        <a href="/films">Фильмы</a>
-      </li>
-      <li className="header-menu-item" onClick={() => onMenuSelect("series")}>
-        <a href="/series">Сериалы</a>
-      </li>
-      <li
-        className="header-menu-item"
-        onClick={() => onMenuSelect("animation")}
-      >
-        <a href="/hdrezka">Аниме</a>
-      </li>
-      <li className="header-menu-item" onClick={() => onMenuSelect("cartoons")}>
-        <a href="/hdrezka">Мультфильмы</a>
-      </li>
-    </ul>
+    <div className="header-menu-wrapper" ref={menuRef}>
+      <ul className="header-menu">
+        {categories.map((cat) => (
+          <li
+            key={cat.title}
+            className="header-menu-item"
+            onClick={() =>
+              setOpenDropdown((prev) => (prev === cat.title ? null : cat.title))
+            }
+          >
+            <span>{cat.title}</span>
+          </li>
+        ))}
+      </ul>
+
+      {openDropdown && (
+        <ul className="dropdown">
+          {categories
+            .find((cat) => cat.title === openDropdown)
+            ?.subcategories?.map((sub) => (
+              <li
+                key={sub.url}
+                className="dropdown-item"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/category${sub.url}`);
+                }}
+              >
+                {sub.title}
+              </li>
+            ))}
+        </ul>
+      )}
+    </div>
   );
 }
 

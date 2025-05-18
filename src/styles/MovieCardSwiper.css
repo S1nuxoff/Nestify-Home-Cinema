@@ -1,0 +1,34 @@
+.movie_card_swiper-container {
+  margin-top: 0px;
+  position: relative;
+  border-bottom: 1px solid var(--white-opacity-10);
+  padding-bottom: 32px;
+}
+.movie_card_swiper {
+  border-bottom: 1px solid var(--white-opacity-10);
+}
+
+.movie_card_swiper_title-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  height: 24px;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.arrow-right-icon {
+  color: #000;
+  opacity: 1;
+  transition: 0.2s ease-in-out;
+}
+/* .movie_card_swiper_title-container:hover .arrow-right-icon {
+  transition: 0.2s ease-in-out;
+  opacity: 1;
+} */
+
+.explorer_watch-history {
+  border-bottom: 1px solid var(--white-opacity-10);
+  padding-bottom: 32px;
+}

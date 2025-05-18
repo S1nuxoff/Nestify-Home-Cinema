@@ -9,7 +9,7 @@ import { getUsers } from "../api/utils";
 import { useNavigate } from "react-router-dom";
 import config from "../core/config";
 
-const Header = ({ currentUser, onSearch, onMovieSelect }) => {
+const Header = ({ categories, currentUser, onSearch, onMovieSelect }) => {
   const isMobile = useMediaQuery({ query: "(max-width: 680px)" });
   const isTablet = useMediaQuery({
     query: "(min-width: 680px) and (max-width: 1199px)",
@@ -106,7 +106,7 @@ const Header = ({ currentUser, onSearch, onMovieSelect }) => {
             </a>
             {renderUserAvatar()}
           </div>
-          <HeaderMenu />
+          <HeaderMenu categories={categories} />
           <Search onSearch={onSearch} onMovieSelect={onMovieSelect} />
         </div>
       ) : isTablet ? (
@@ -118,7 +118,7 @@ const Header = ({ currentUser, onSearch, onMovieSelect }) => {
             <Search onSearch={onSearch} onMovieSelect={onMovieSelect} />
             {renderUserAvatar()}
           </div>
-          <HeaderMenu />
+          <HeaderMenu categories={categories} />
         </div>
       ) : (
         <>
@@ -126,7 +126,7 @@ const Header = ({ currentUser, onSearch, onMovieSelect }) => {
             <Logo className="header-logo" />
           </a>
           <Search onSearch={onSearch} onMovieSelect={onMovieSelect} />
-          <HeaderMenu />
+          <HeaderMenu categories={categories} />
           {renderUserAvatar()}
         </>
       )}

@@ -1,13 +1,82 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"); */
 @import "keen-slider/keen-slider.min.css";
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("../assets/fonts/SFPRODISPLAYBLACKITALIC.OTF") format("opentype");
+  font-weight: 900;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("../assets/fonts/SFPRODISPLAYBOLD.OTF") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("../assets/fonts/SFPRODISPLAYHEAVYITALIC.OTF") format("opentype");
+  font-weight: 800;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("../assets/fonts/SFPRODISPLAYLIGHTITALIC.OTF") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("../assets/fonts/SFPRODISPLAYMEDIUM.OTF") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("../assets/fonts/SFPRODISPLAYREGULAR.OTF") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("../assets/fonts/SFPRODISPLAYSEMIBOLDITALIC.OTF") format("opentype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("../assets/fonts/SFPRODISPLAYTHINITALIC.OTF") format("opentype");
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("../assets/fonts/SFPRODISPLAYULTRALIGHTITALIC.OTF")
+    format("opentype");
+  font-weight: 200;
+  font-style: italic;
+}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
+body {
+  background-color: var(--dark);
+  font-family: "SF Pro Display", sans-serif;
+  padding-bottom: 32px;
+}
 :root {
-  --dark: #1e1e1e;
+  --dark: #2d2d2d;
   --white: #eeeeee;
   --green: #00c717;
   --red: #ff223f;
@@ -29,14 +98,20 @@
   --white-opacity-80: rgba(238, 238, 238, 80%);
   --white-opacity-90: rgba(238, 238, 238, 90%);
   --white-gray: rgba(238, 238, 238, 0.7);
+  --dark-opacity-5: rgba(30, 30, 30, 5%);
+  --dark-opacity-10: rgba(30, 30, 30, 10%);
+  --dark-opacity-20: rgba(30, 30, 30, 20%);
+  --dark-opacity-30: rgba(30, 30, 30, 30%);
+  --dark-opacity-40: rgba(30, 30, 30, 40%);
+  --dark-opacity-50: rgba(30, 30, 30, 50%);
+  --dark-opacity-60: rgba(30, 30, 30, 60%);
+  --dark-opacity-70: rgba(30, 30, 30, 70%);
+  --dark-opacity-80: rgba(30, 30, 30, 80%);
+  --dark-opacity-90: rgba(30, 30, 30, 90%);
   --gray-2: #262626;
+  --blue: #0a84ff;
 }
 
-body {
-  background-color: var(--dark);
-  font-family: "Roboto", sans-serif;
-  padding-bottom: 32px;
-}
 /* .body-backdrop {
   position: absolute;
   top: 0;
@@ -62,7 +137,7 @@ body {
   z-index: -2;
   opacity: 0.2;
 }
-.background-blur-100 {
+/* .background-blur-100 {
   width: 100%;
   height: 100%;
   z-index: -1;
@@ -71,19 +146,20 @@ body {
   background-color: rgba(0, 0, 0, 0.1);
   top: 0;
   left: 0;
-}
+} */
 .body-backdrop {
-  position: absolute; /* Фиксируем элемент относительно всего окна */
+  position: absolute; /* 👈 fixed — чтобы не зависело от родителя */
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.2;
-  filter: blur(200px);
-  z-index: -1; /* Оставляем на фоне */
+  width: 99vw;
+  height: 600px;
   background-size: cover;
   background-repeat: no-repeat;
-  max-width: 400px;
+  background-position: center;
+  z-index: -1;
+  transition: 0.4s ease-in-out;
+  filter: blur(200px); /* можешь включить для эффекта */
+  opacity: 0.5; /* можешь настроить */
 }
 
 .scroll-info {
@@ -109,9 +185,12 @@ body {
     align-items: center;
     justify-content: center;
   }
+  .video-card-preview-wrapper {
+    height: 160px;
+  }
 }
 .row-header-title {
-  font-size: 24px;
+  font-size: 18px;
   color: var(--white);
   font-weight: 600;
 }
@@ -123,15 +202,9 @@ body {
   .continue_description {
     max-width: 400px;
   }
-  .player-swiper {
-    padding-right: 50px;
-  }
 }
 
 @media (max-width: 900px) {
-  .explorer-library-grid {
-    grid-template-columns: 1fr 1fr; /* Две колонки на планшетах */
-  }
   /* .video-card-container {
     max-height: 450px;
   } */
@@ -151,8 +224,9 @@ body {
     margin: 0;
     border-radius: 0px;
   }
-  .player-swiper {
-    padding-right: 40px;
+
+  .video-card-preview-wrapper {
+    height: 130px;
   }
 }
 
@@ -172,9 +246,7 @@ body {
   /* .video-card-container {
     max-height: 400px;
   } */
-  .playback-controls-container {
-    width: 550px;
-  }
+
   .continue-title {
     font-size: 28px;
   }
@@ -202,9 +274,6 @@ body {
   }
   .continue-title {
     font-size: 28px;
-  }
-  .player-swiper {
-    padding-right: 20px;
   }
 }
 @media (max-width: 680px) {
@@ -264,6 +333,12 @@ body {
     right: 16px;
     bottom: auto;
   }
+  .continue-container.unmuted {
+    height: 480px;
+  }
+  .continue-container.unmuted .youtube-player {
+    transform: scale(2.5);
+  }
 }
 @media (max-width: 550px) {
   .explorer-library-grid {
@@ -321,6 +396,11 @@ body {
   }
 }
 
+@media (max-width: 530px) {
+  .video-card-preview-wrapper {
+    height: 180px; /* Устанавливаем высоту блока */
+  }
+}
 @media (max-width: 450px) {
   .continue-content-bottom {
     justify-content: center;
@@ -346,12 +426,10 @@ body {
     height: 440px;
   }
 }
-.web-player-container {
-  position: fixed;
+.video-js {
+  height: 100%;
+  width: 100%;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: black;
-  z-index: 9999;
 }

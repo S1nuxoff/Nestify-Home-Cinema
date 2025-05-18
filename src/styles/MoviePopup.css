@@ -146,6 +146,12 @@
   gap: 4px;
 }
 
+.movie-modal_controls-play-btn {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .movie-modal__play-button {
   cursor: pointer;
   display: flex;
@@ -160,6 +166,16 @@
   transition: 0.1s ease-in;
   font-size: 16px;
   font-weight: 700;
+}
+.movie-modal__cast-button {
+  cursor: pointer;
+  /* background-color: var(--white-opacity-10); */
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .movie-modal__play-button:hover {
   background-color: var(--red);
@@ -419,8 +435,4 @@
   height: 100%;
   transform: scale(2);
   overflow: hidden;
-}
-.movie-modal_controls-play-btn {
-  display: flex;
-  gap: 8px;
 }

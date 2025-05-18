@@ -33,7 +33,6 @@ export const addMovieToHistory = async ({
   action,
   season_id,
   episode_id,
-  position,
 }) => {
   try {
     const response = await UserApiClient.post(
@@ -44,7 +43,6 @@ export const addMovieToHistory = async ({
         action,
         season: season_id,
         episode: episode_id,
-        position_seconds: position, // ✅ FIX HERE
       },
       {
         params: { user_id },

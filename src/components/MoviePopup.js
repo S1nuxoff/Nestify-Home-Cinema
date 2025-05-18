@@ -5,6 +5,7 @@ import { ReactComponent as StarIcon } from "../assets/icons/star.svg";
 import { ReactComponent as CloseIcon } from "../assets/icons/close.svg";
 import { ReactComponent as PlayIcon } from "../assets/icons/play.svg";
 import { ReactComponent as DropIcon } from "../assets/icons/drop-down.svg";
+import { ReactComponent as CastIcon } from "../assets/icons/cast.svg";
 import { ReactComponent as VolumeMute } from "../assets/icons/volume-mute.svg";
 import { ReactComponent as VolumeOne } from "../assets/icons/volume-one.svg";
 import { SkeletonLine, SkeletonPoster } from "./Skeleton";
@@ -76,7 +77,6 @@ const MoviePopup = ({
       translatorId: selectedTranslatorId,
       action: movieDetails.action,
     });
-    console.log(success);
     if (success) {
       setSelectedTranslatorId(null);
       setSelectedSeason(null);
@@ -109,12 +109,13 @@ const MoviePopup = ({
         movie_id: movieDetails.id,
         translator_id: selectedTranslatorId,
         action: movieDetails.action,
-        position: 0,
       });
       navigate(`/player/${movieDetails.id}`, {
         state: {
           movieDetails,
           movie_url,
+          selectedEpisode,
+          selectedSeason,
         },
       });
     }
@@ -219,10 +220,10 @@ const MoviePopup = ({
                           <PlayIcon /> Play
                         </div>
                         <div
-                          className="movie-modal__play-button"
+                          className="movie-modal__cast-button"
                           onClick={handlePlayKodi}
                         >
-                          <PlayIcon /> Play Kodi
+                          <CastIcon />
                         </div>
                       </div>
                       {movieDetails?.trailer && (

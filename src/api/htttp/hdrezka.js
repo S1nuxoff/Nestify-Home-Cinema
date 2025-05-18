@@ -22,6 +22,15 @@ export const getPage = async (link) => {
   }
 };
 
+export const getMainPage = async () => {
+  try {
+    const response = await apiClient.get("get_main_page");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getWatchHistory = async (user_id) => {
   try {
     const response = await apiClient.get("get_watch_history", {
@@ -74,6 +83,18 @@ export const getSource = async (
     });
     return response.data;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const getCategories = async () => {
+  try {
+    const response = await apiClient.get("get_categories", {
+      params: { url: "https://rezka.ag/" }, // ← url, не link
+    });
+    return response.data;
+  } catch (error) {
+    console.error("getCategories error:", error?.response || error);
     throw error;
   }
 };

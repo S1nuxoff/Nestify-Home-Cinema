@@ -4,7 +4,7 @@ import "swiper/css";
 import "../styles/Explorer.css";
 
 function Explorer({ history, title, Page, onMovieSelect }) {
-  const [visibleCount] = useState(8);
+  const [visibleCount] = useState(100);
 
   return (
     <div className="explorer-container">

@@ -3,11 +3,14 @@ import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ContinueWatch from "../components/ContinueWatch";
 
-function HeroSwiper({ onMovieSelect, history }) {
+function HeroSwiper({ onMovieSelect, history, onActiveIndexChange }) {
   const [activeIndex, setActiveIndex] = useState(0);
   return (
     <Swiper
-      onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+      onSlideChange={(swiper) => {
+        setActiveIndex(swiper.activeIndex);
+        onActiveIndexChange?.(swiper.activeIndex);
+      }}
       slidesPerView={1}
       spaceBetween={10}
       centeredSlides={false}
@@ -23,6 +26,7 @@ function HeroSwiper({ onMovieSelect, history }) {
               movie={movie}
               onMovieSelect={onMovieSelect}
               isActive={idx === activeIndex}
+              resetTrigger={activeIndex}
             />
           </SwiperSlide>
         ))}
