@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getPage, getCategories } from "../api/htttp/hdrezka";
 import Explorer from "../components/Explorer";
@@ -6,23 +6,38 @@ import MoviePopup from "../components/MoviePopup";
 import Header from "../components/Header";
 import config from "../core/config";
 import useMovieDetails from "../hooks/useMovieDetails";
+import Pagination from "../components/Pagination";
+import Footer from "../components/Footer";
+import "../styles/Category.css";
+import { ReactComponent as BackIcon } from "../assets/icons/back.svg";
 
-function Category({ currentUser }) {
+function Category({}) {
   const location = useLocation();
-  const [pageData, setPageData] = useState([]);
+  const navigate = useNavigate();
+  const [pageData, setPageData] = useState({ items: [], pages_count: 1 });
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [categories, setCategories] = useState([]);
   const { movieDetails, loading } = useMovieDetails(
     selectedMovie?.filmLink || selectedMovie?.link
   );
+  const currentUser = JSON.parse(localStorage.getItem("current_user"));
+  // 🎯 шлях на бекенд: після "/category", включаючи page/X/
+  const backendPath = location.pathname
+    .replace(/^\/category/, "")
+    .replace(/\/{2,}/g, "/") // убираем двойные/тройные слэши
+    .replace(/\/+$/, ""); // убираем / в конце
+
+  const fullUrl = config.hdrezk_url + backendPath;
+
+  const baseUrl = "/category" + backendPath.replace(/\/page\/\d+\/?$/, "");
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const path = location.pathname; // "/category/cartoons/western/"
-        const cleanPath = path.replace(/^\/category/, ""); // "/cartoons/western/"
-        const fullUrl = config.hdrezk_url + cleanPath;
-
         const data = await getPage(fullUrl);
         setPageData(data);
       } catch (err) {
@@ -31,7 +46,7 @@ function Category({ currentUser }) {
     };
 
     fetchData();
-  }, [location.pathname]);
+  }, [location.pathname]); // ⬅️ виконується на кожну зміну шляху
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +54,7 @@ function Category({ currentUser }) {
         const { categories: list = [] } = await getCategories();
         setCategories(list);
       } catch (error) {
-        console.error("Error fetching main page data:", error);
+        console.error("Error fetching categories:", error);
       }
     };
     fetchData();
@@ -63,12 +78,27 @@ function Category({ currentUser }) {
           onMovieSelect={setSelectedMovie}
           currentUser={currentUser}
         />
-        <Explorer
-          Page={pageData}
-          title={null}
-          currentUser={currentUser}
-          onMovieSelect={setSelectedMovie}
-        />
+        <div className="category-content">
+          <div className="category-content-top">
+            <div className="category-content-title">
+              <BackIcon
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/")}
+              />
+
+              <span className="row-header-title">{pageData.title}</span>
+            </div>
+          </div>
+
+          <Explorer
+            Page={pageData.items}
+            title={null}
+            currentUser={currentUser}
+            onMovieSelect={setSelectedMovie}
+          />
+          <Pagination totalPages={pageData.pages_count} baseUrl={baseUrl} />
+        </div>
+        <Footer />
       </div>
     </>
   );

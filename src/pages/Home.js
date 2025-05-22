@@ -7,7 +7,6 @@ import {
   getWatchHistory,
 } from "../api/htttp/hdrezka";
 
-import Explorer from "../components/Explorer";
 import Header from "../components/Header";
 import HeroSwiper from "../components/HeroSwiper";
 import KodiLiveSessionPlayer from "../components/KodiLiveSessionPlayer";
@@ -17,10 +16,11 @@ import MoviePopup from "../components/MoviePopup";
 import CollectionsSwiper from "../components/CollectionsSwiper";
 import useLiveSession from "../hooks/useLiveSession";
 import useMovieDetails from "../hooks/useMovieDetails";
+import Footer from "../components/Footer";
 
 import "../styles/HomePage.css";
 
-function Home({ currentUser }) {
+function Home({}) {
   /* ───────── state ───────── */
   const [page, setPage] = useState({});
   const [history, setHistory] = useState([]);
@@ -36,7 +36,7 @@ function Home({ currentUser }) {
   const { movieDetails, loading: movieLoading } = useMovieDetails(
     selectedMovie?.filmLink || selectedMovie?.link
   );
-
+  const currentUser = JSON.parse(localStorage.getItem("current_user"));
   /* ───────── handlers ───────── */
   const handleMovieSelect = (movie) => setSelectedMovie(movie);
   const closePopup = () => setSelectedMovie(null);
@@ -98,7 +98,7 @@ function Home({ currentUser }) {
   return (
     <>
       {/* задній фон для Hero */}
-      {history.length > 0 && (
+      {Array.isArray(history) && history.length > 0 && (
         <div
           className="body-backdrop"
           style={{
@@ -145,9 +145,14 @@ function Home({ currentUser }) {
         )}
 
         <div className="home-page-content">
-          {!isHistoryLoading && history.length > 0 && (
-            <WatchHistory onMovieSelect={handleMovieSelect} history={history} />
-          )}
+          {!isHistoryLoading &&
+            Array.isArray(history) &&
+            history.length > 0 && (
+              <WatchHistory
+                onMovieSelect={handleMovieSelect}
+                history={history}
+              />
+            )}
 
           {!isPageLoading && (
             <>
@@ -157,20 +162,20 @@ function Home({ currentUser }) {
               />
               <MovieCardSwiper
                 navigate_to="/new"
-                data={page.newest}
+                data={page.newest.items}
                 onMovieSelect={handleMovieSelect}
                 title="New Releases"
               />
 
               <MovieCardSwiper
                 navigate_to="?filter=popular"
-                data={page.popular}
+                data={page.popular.items}
                 onMovieSelect={handleMovieSelect}
                 title="Popular"
               />
               <MovieCardSwiper
                 navigate_to="?filter=watching"
-                data={page.watching}
+                data={page.watching.items}
                 onMovieSelect={handleMovieSelect}
                 title="Watching"
               />
@@ -183,6 +188,7 @@ function Home({ currentUser }) {
               <div className="spinner" />
             </div>
           )}
+          <Footer />
         </div>
       </div>
     </>

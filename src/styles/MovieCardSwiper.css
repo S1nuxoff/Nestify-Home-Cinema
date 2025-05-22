@@ -1,10 +1,11 @@
-.movie_card_swiper-container:not(:last-child) {
-  /* border-bottom: 1px solid var(--white-opacity-5);
-  padding-bottom: 20px; */
+.movie_card_swiper-container:not(:last-of-type) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 24px;
 }
+
 .explorer_watch-history {
-  /* border-bottom: 1px solid var(--white-opacity-5);
-  padding-bottom: 20px; */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 24px;
 }
 
 .movie_card_swiper_title-container {
@@ -27,3 +28,8 @@
   transition: 0.2s ease-in-out;
   opacity: 1;
 } */
+
+.movie_card_swiper .swiper-slide {
+  width: 300px !important; /* или через JS, как выше */
+  /* Можно задать min-width / max-width по необходимости */
+}

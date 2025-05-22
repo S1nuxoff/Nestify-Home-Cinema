@@ -21,8 +21,10 @@ function CollectionsSwiper({ data, title, navigate_to }) {
       </div>
 
       <Swiper
+        className="movie_card_swiper"
         style={{ marginTop: "20px" }}
-        spaceBetween={16}
+        spaceBetween={20}
+        slidesPerView="auto"
         breakpoints={{
           0: { slidesPerView: 2.2 },
           768: { slidesPerView: 3 },

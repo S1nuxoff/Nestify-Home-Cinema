@@ -1,7 +1,7 @@
 // hooks/useLiveSession.js
 import { useState, useEffect } from "react";
 
-const WS_URL = "ws://192.168.15:8000/ws/live_session";
+const WS_URL = "ws://212.162.155.61:8000/ws/live_session";
 
 const useLiveSession = () => {
   const [session, setSession] = useState(null);

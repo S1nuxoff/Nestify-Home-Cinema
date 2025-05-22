@@ -329,23 +329,23 @@
 
 .continue-volume-btn {
   position: absolute;
-  background-color: var(--white);
-  backdrop-filter: blur(10px);
+  /* background-color: var(--white); */
   bottom: 32px;
   right: 32px;
   z-index: 10;
   padding: 8px;
-  border-radius: 32px;
-  padding-bottom: 4px;
-  transition: 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .continue-volume-btn:hover {
-  background-color: var(--white-opacity-40);
-  backdrop-filter: blur(10px);
+  /* background-color: var(--white-opacity-40);
+  backdrop-filter: blur(10px); */
 }
 
 .continue-volume-icon {
+  width: 40px;
+  height: 40px;
+  display: block;
 }
 
 .fade-in {
@@ -358,4 +358,147 @@
 
 .continue-container.unmuted .youtube-player {
   transform: scale(1.5);
+}
+
+/* Основной контейнер */
+.web-player-container {
+  width: 100%;
+
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Стилизация Video.js плеера */
+.video-js.custom-theme {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  overflow: hidden;
+  font-size: 16px;
+}
+
+/* Панель управления */
+.video-js.custom-theme .vjs-control-bar {
+  background: var(--dark-opacity-50);
+  backdrop-filter: blur(10px);
+  height: 80px;
+  padding: 0 32px;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  position: fixed;
+  width: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 32px;
+  border-radius: 64px;
+}
+
+/* Иконки управления */
+.video-js.custom-theme .vjs-button {
+  color: var(--white);
+  transition: 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.video-js.custom-theme .vjs-control {
+  width: 40px;
+}
+.video-js.custom-theme .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover {
+  width: 64px;
+}
+.video-js.custom-theme .vjs-button:hover {
+  color: var(--white-opacity-70);
+}
+.vjs-icon-placeholder:before {
+  content: "\f103";
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+/* Ползунок прогресса */
+.video-js.custom-theme .vjs-progress-control {
+}
+
+.video-js.custom-theme .vjs-play-progress {
+  background-color: var(--red);
+}
+.video-js.custom-theme .vjs-load-progress {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.video-js.custom-theme .vjs-progress-holder {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+/* Кнопки (play, volume, etc.) */
+.video-js.custom-theme .vjs-button {
+  font-size: 22px; /* Размер иконок */
+  width: 40px;
+  height: 40px;
+  margin: 0;
+}
+/* Таймлайн */
+.video-js.custom-theme .vjs-time-control {
+  color: #ffffff;
+  font-weight: 500;
+  padding: 0;
+}
+.video-js.custom-theme .vjs-remaining-time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.video-js.custom-theme .vjs-picture-in-picture-control {
+  display: none;
+}
+.video-js.custom-theme .vjs-volume-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* width: 32px; */
+}
+
+/* Громкость */
+.video-js.custom-theme .vjs-volume-control {
+  width: 0px;
+}
+.video-js.custom-theme .vjs-volume-level {
+  background-color: var(--red);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.video-js.custom-theme .vjs-volume-bar {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.video-js.custom-theme .vjs-volume-panel {
+}
+/* Текст субтитров (если используешь) */
+.video-js.custom-theme .vjs-text-track-display {
+  font-size: 18px;
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  /* Панель управления */
+  .video-js.custom-theme .vjs-control-bar {
+    background: var(--white-opacity-10);
+    backdrop-filter: blur(10px);
+    height: 80px;
+    padding: 0 16px;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    border-radius: 0;
+  }
+  .video-js.custom-theme .vjs-button {
+    font-size: 16px; /* Размер иконок */
+  }
 }

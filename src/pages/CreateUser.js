@@ -51,8 +51,6 @@ function CreateUser() {
           avatar_url: selectedAvatar.local_url,
         });
 
-        console.log("✅ Профіль створено:", response);
-
         // 👉 Перейти, например, на главную или на профиль
         navigate("/login"); // или `/profile/${response.id}`
       } catch (err) {

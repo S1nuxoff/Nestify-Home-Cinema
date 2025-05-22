@@ -32,7 +32,7 @@ function Login() {
   }, []);
 
   return (
-    <>
+    <div className="container">
       <div className="login-container">
         <h2 className="login-title">Who's watching?</h2>
         <div className="login-users-list">
@@ -51,7 +51,7 @@ function Login() {
       </div>
       <div className="background-blur-100"></div>
       <div className="background-glow-center-green"></div>
-    </>
+    </div>
   );
 }
 

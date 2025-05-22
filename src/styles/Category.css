@@ -1,0 +1,13 @@
+.category-content {
+  margin-top: 48px;
+}
+.category-content-title {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  width: fit-content;
+}
+.category-content-top {
+  display: flex;
+  justify-content: space-between;
+}

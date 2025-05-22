@@ -4,18 +4,15 @@ import VideoCard from "./VideoCard";
 import "swiper/css";
 
 function WatchHistory({ onMovieSelect, history }) {
-  console.log(history);
   return (
     <div className="explorer_watch-history">
       <span className="row-header-title">History</span>
       <Swiper
-        style={{ paddingRight: "0px", marginTop: "16px" }}
-        slidesPerView={1.1}
-        spaceBetween={10}
-        centeredSlides={false}
+        style={{ marginTop: "20px" }}
+        spaceBetween={20}
+        slidesPerView="auto"
         breakpoints={{
           0: { slidesPerView: 2.2 },
-          480: { slidesPerView: 2.2 },
           768: { slidesPerView: 3 },
           1024: { slidesPerView: 4 },
           1280: { slidesPerView: 5 },

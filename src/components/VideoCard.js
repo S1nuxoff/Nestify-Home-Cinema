@@ -20,9 +20,12 @@ function VideoCard({ movie, onMovieSelect, type }) {
   return (
     <div className="video-card-container" onClick={() => onMovieSelect(movie)}>
       <div
-        className={`video-card-preview-wrapper ${
-          type === "history" ? "video-card-preview-wrapper-history" : ""
-        }`}
+        className={
+          `video-card-preview-wrapper` +
+          (type === "explorer-card"
+            ? " video-card-preview-wrapper-explorer"
+            : "")
+        }
       >
         <img
           src={movie.filmImage ?? movie.image}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ReactComponent as PlayIcon } from "../assets/icons/play.svg";
 import { ReactComponent as VolumeMute } from "../assets/icons/volume-mute.svg";
 import { ReactComponent as VolumeOne } from "../assets/icons/volume-one.svg";
@@ -11,6 +11,24 @@ function ContinueWatch({ onMovieSelect, movie, isActive, resetTrigger }) {
   const [posterVisible, setPosterVisible] = useState(true);
   const [trailerVisible, setTrailerVisible] = useState(false);
   const [contentVisible, setContentVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true); // 👈 нове
+
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.5 }
+    );
+
+    if (wrapperRef.current) observer.observe(wrapperRef.current);
+    return () => {
+      if (wrapperRef.current) observer.unobserve(wrapperRef.current);
+    };
+  }, []);
+
   useEffect(() => {
     setIsMuted(true);
   }, [resetTrigger]);
@@ -26,13 +44,8 @@ function ContinueWatch({ onMovieSelect, movie, isActive, resetTrigger }) {
       setTrailerVisible(false);
       setContentVisible(true);
 
-      const hidePosterTimer = setTimeout(() => {
-        setPosterVisible(false);
-      }, 5000);
-
-      const showTrailerTimer = setTimeout(() => {
-        setTrailerVisible(true);
-      }, 6000);
+      const hidePosterTimer = setTimeout(() => setPosterVisible(false), 5000);
+      const showTrailerTimer = setTimeout(() => setTrailerVisible(true), 6000);
 
       return () => {
         clearTimeout(hidePosterTimer);
@@ -46,7 +59,10 @@ function ContinueWatch({ onMovieSelect, movie, isActive, resetTrigger }) {
   }, [isActive, movie?.trailer]);
 
   return (
-    <div className={`continue-container ${!isMuted ? "unmuted" : ""}`}>
+    <div
+      className={`continue-container ${!isMuted ? "unmuted" : ""}`}
+      ref={wrapperRef}
+    >
       <div className="player-preview-wrapper">
         <div
           style={{
@@ -89,7 +105,7 @@ function ContinueWatch({ onMovieSelect, movie, isActive, resetTrigger }) {
               {trailerVisible && (
                 <ReactPlayer
                   url={movie.trailer}
-                  playing={true}
+                  playing={isVisible && isActive} // 👈 залежить від скролу
                   muted={isMuted}
                   controls={false}
                   loop

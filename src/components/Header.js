@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useMediaQuery } from "react-responsive";
 import { ReactComponent as Logo } from "../assets/icons/logo.svg";
 import { ReactComponent as SettingsIcon } from "../assets/icons/settings.svg";
@@ -16,8 +16,15 @@ const Header = ({ categories, currentUser, onSearch, onMovieSelect }) => {
   });
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const [allUsers, setAllUsers] = useState([]);
   const navigate = useNavigate();
+
+  const sortedUsers = useMemo(() => {
+    if (!currentUser) return allUsers;
+    const rest = allUsers.filter((u) => u.id !== currentUser.id);
+    return [currentUser, ...rest];
+  }, [allUsers, currentUser]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -32,6 +39,21 @@ const Header = ({ categories, currentUser, onSearch, onMovieSelect }) => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    if (!isDropdownOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Clean up
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
   const handleUserSwitch = (user) => {
     localStorage.setItem("current_user", JSON.stringify(user));
     window.location.reload(); // перезагрузка
@@ -40,6 +62,7 @@ const Header = ({ categories, currentUser, onSearch, onMovieSelect }) => {
   const handleLogout = () => {
     localStorage.removeItem("current_user");
     navigate("/login");
+    window.location.reload();
   };
 
   const renderUserAvatar = () => (
@@ -56,33 +79,50 @@ const Header = ({ categories, currentUser, onSearch, onMovieSelect }) => {
       </div>
 
       {isDropdownOpen && (
-        <div className="header-user__dropdown under-avatar">
+        <div
+          className="header-user__dropdown under-avatar"
+          ref={dropdownRef} // <-- вот тут!
+        >
           <div className="dropdown-users-list">
-            {allUsers.map((user) => (
+            {sortedUsers.map((user, idx) => (
               <div
                 key={user.id}
-                className="dropdown-user"
+                className={
+                  "dropdown-user" +
+                  (user.id === currentUser.id ? " dropdown-user--active" : "") +
+                  (idx === 0 ? " dropdown-user--first" : "")
+                }
                 onClick={() => handleUserSwitch(user)}
               >
-                <img
-                  src={`${config.backend_url}${user.avatar_url}`}
-                  alt={user.name}
-                  className="dropdown-user-avatar"
-                />
-                <span className="header-dropdown__user-name">{user.name}</span>
+                <div className="dropdown-user-container">
+                  <img
+                    src={`${config.backend_url}${user.avatar_url}`}
+                    alt={user.name}
+                    className="dropdown-user-avatar"
+                  />
+                  <span className="header-dropdown__user-name">
+                    {user.name}
+                  </span>
+                </div>
+                {user.id === currentUser.id && (
+                  <>
+                    {/* <button
+                      className="dropdown-button"
+                      onClick={() => navigate("/settings")}
+                    >
+                      Settings
+                    </button> */}
+                    <button
+                      className="dropdown-button logout"
+                      onClick={handleLogout}
+                    >
+                      Exit
+                    </button>
+                  </>
+                )}
               </div>
             ))}
           </div>
-
-          <button
-            className="dropdown-button"
-            onClick={() => navigate("/settings")}
-          >
-            Settings
-          </button>
-          <button className="dropdown-button logout" onClick={handleLogout}>
-            Exit
-          </button>
         </div>
       )}
     </div>

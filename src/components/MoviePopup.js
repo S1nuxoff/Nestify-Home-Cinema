@@ -1,6 +1,7 @@
 // src/components/MoviePopup.js
 import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
+import Lottie from "lottie-react";
 import { ReactComponent as StarIcon } from "../assets/icons/star.svg";
 import { ReactComponent as CloseIcon } from "../assets/icons/close.svg";
 import { ReactComponent as PlayIcon } from "../assets/icons/play.svg";
@@ -9,6 +10,7 @@ import { ReactComponent as CastIcon } from "../assets/icons/cast.svg";
 import { ReactComponent as VolumeMute } from "../assets/icons/volume-mute.svg";
 import { ReactComponent as VolumeOne } from "../assets/icons/volume-one.svg";
 import { SkeletonLine, SkeletonPoster } from "./Skeleton";
+import ErrorAnimatedIcon from "../assets/icons/animated/error.json"; // твій JSON-файл
 import { createSession } from "../api/session";
 import TranslatorItem from "./TranslatorItem";
 import EpisodeSelectorItem from "./EpisodeSelectorItem";
@@ -33,7 +35,21 @@ const MoviePopup = ({
   const [isVisible, setIsVisible] = useState(true);
   const { playMovieSource } = useMovieSource();
   const [browserUrl, setBrowserUrl] = useState(null);
+  const [validationMessage, setValidationMessage] = useState("");
+  const [showValidation, setShowValidation] = useState(false);
 
+  useEffect(() => {
+    if (validationMessage) {
+      setShowValidation(true); // Показати
+
+      const timer = setTimeout(() => {
+        setShowValidation(false); // Почати зникнення
+        setTimeout(() => setValidationMessage(""), 400); // Прибрати після анімації
+      }, 5000); // 5 секунд
+
+      return () => clearTimeout(timer);
+    }
+  }, [validationMessage]);
   const navigate = useNavigate();
   const toggleMute = () => {
     setIsMuted(!isMuted);
@@ -70,6 +86,18 @@ const MoviePopup = ({
   }, [loading, movieDetails]);
 
   const handlePlayKodi = async () => {
+    setValidationMessage("");
+    if (!selectedTranslatorId) {
+      return setValidationMessage("Будь ласка, виберіть озвучку");
+    }
+    if (movieDetails.action === "get_stream") {
+      if (!selectedSeason) {
+        return setValidationMessage("Будь ласка, виберіть сезон");
+      }
+      if (!selectedEpisode) {
+        return setValidationMessage("Будь ласка, виберіть епізод");
+      }
+    }
     const success = await playMovieSource({
       seasonId: selectedSeason,
       episodeId: selectedEpisode,
@@ -93,6 +121,18 @@ const MoviePopup = ({
   };
 
   const handlePlayBrowser = async () => {
+    setValidationMessage("");
+    if (!selectedTranslatorId) {
+      return setValidationMessage("Будь ласка, виберіть озвучку.");
+    }
+    if (movieDetails.action === "get_stream") {
+      if (!selectedSeason) {
+        return setValidationMessage("Будь ласка, виберіть сезон.");
+      }
+      if (!selectedEpisode) {
+        return setValidationMessage("Будь ласка, виберіть епізод.");
+      }
+    }
     const movie_url = await getMovieStreamUrl({
       seasonId: selectedSeason,
       episodeId: selectedEpisode,
@@ -192,6 +232,27 @@ const MoviePopup = ({
           ) : movieDetails ? (
             <>
               <div className="movie-modal__content">
+                {validationMessage && (
+                  <div
+                    className={`movie-modal__validation-message ${
+                      showValidation ? "visible" : ""
+                    }`}
+                  >
+                    <Lottie
+                      className="error_animated_icon"
+                      animationData={ErrorAnimatedIcon}
+                      loop
+                      autoplay
+                    />
+                    <div className="message-content">
+                      <div className="message-title">Ooops..</div>
+                      <div className="message-subtitle">
+                        {validationMessage}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <button className="movie-modal__close-btn" onClick={onClose}>
                   <CloseIcon style={{ cursor: "pointer" }} />
                 </button>
@@ -406,7 +467,7 @@ const MoviePopup = ({
                     </div>
                     <div className="movie-modal__translators">
                       <span className="movie-modal__section-title">
-                        Sound Tracks
+                        Voiceover
                       </span>
                       <div className="movie-modal__translators-container">
                         {movieDetails.translator_ids.map((translator) => (

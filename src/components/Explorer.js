@@ -16,6 +16,7 @@ function Explorer({ history, title, Page, onMovieSelect }) {
               key={movie.id}
               movie={movie}
               onMovieSelect={onMovieSelect}
+              type={"explorer-card"}
             />
           ))}
       </div>

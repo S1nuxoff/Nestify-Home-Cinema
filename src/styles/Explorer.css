@@ -1,5 +1,4 @@
 .explorer-container {
-  margin-top: 32px;
   display: flex;
   flex-direction: column;
 }
@@ -10,13 +9,18 @@
   margin-top: 24px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr; /* 3 колонки */
-  gap: 16px;
+  gap: 48px 24px;
   width: 100%;
   align-items: start;
 }
 .explorer_watch-history {
   margin-top: 32px;
   margin-bottom: 16px;
+}
+
+.explorer_watch-history .swiper-slide {
+  width: 300px !important; /* или через JS, как выше */
+  /* Можно задать min-width / max-width по необходимости */
 }
 
 /* Первый большой блок (Фильтр) */

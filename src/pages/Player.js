@@ -49,7 +49,7 @@ export default function Player() {
     };
   }, []);
 
-  /* 3. после готовности плеера + позиции — seek + mute + play */
+  /* 3. после готовности плеера + позиции — seek + mute + play + SAVE */
   useEffect(() => {
     const p = playerRef.current;
     if (!p || startPos === null) return;
@@ -63,7 +63,9 @@ export default function Player() {
     p.readyState() > 0 ? run() : p.one("loadedmetadata", run);
 
     /* ── сохранение прогресса ── */
-    const save = () =>
+    const save = () => {
+      // Не отправлять прогресс, если видео на паузе (для таймера)
+      if (p.paused()) return;
       saveProgress({
         user_id: userId,
         movie_id: movieDetails.id,
@@ -71,9 +73,21 @@ export default function Player() {
         season: selectedSeason ?? null,
         episode: selectedEpisode ?? null,
       });
+    };
 
-    p.on("pause", save);
-    p.on("seeked", save);
+    // На паузу и перемотку — сохраняем сразу (даже если paused)
+    const saveAlways = () => {
+      saveProgress({
+        user_id: userId,
+        movie_id: movieDetails.id,
+        position_seconds: Math.floor(p.currentTime()),
+        season: selectedSeason ?? null,
+        episode: selectedEpisode ?? null,
+      });
+    };
+
+    p.on("pause", saveAlways);
+    p.on("seeked", saveAlways);
     timerRef.current = setInterval(save, 30_000);
 
     return () => {
@@ -91,14 +105,61 @@ export default function Player() {
       }
 
       // 2️⃣ снимаем подписки и таймер
-      p.off("pause", save);
-      p.off("seeked", save);
+      p.off("pause", saveAlways);
+      p.off("seeked", saveAlways);
       clearInterval(timerRef.current);
 
       // 3️⃣ уничтожаем плеер
       p.dispose();
     };
-  }, [startPos]);
+  }, [startPos, userId, movieDetails, selectedSeason, selectedEpisode]);
+
+  /* 4. Горячие клавиши */
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const player = playerRef.current;
+      if (!player) return;
+      // Игнорируем если сейчас вводим в input/textarea
+      if (
+        document.activeElement &&
+        (document.activeElement.tagName === "INPUT" ||
+          document.activeElement.tagName === "TEXTAREA" ||
+          document.activeElement.isContentEditable)
+      ) {
+        return;
+      }
+      switch (e.code) {
+        case "Space":
+        case "Spacebar":
+          e.preventDefault();
+          player.paused() ? player.play() : player.pause();
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          player.currentTime(player.currentTime() + 10);
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          player.currentTime(Math.max(0, player.currentTime() - 10));
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          player.volume(Math.min(1, player.volume() + 0.1));
+          break;
+        case "ArrowDown":
+          e.preventDefault();
+          player.volume(Math.max(0, player.volume() - 0.1));
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   if (!movieDetails || !movie_url) return <p>Дані відсутні…</p>;
   const proxyUrl = `${config.backend_url}/proxy?url=${movie_url}`;
@@ -107,8 +168,8 @@ export default function Player() {
     <div className="web-player-container">
       <video
         ref={videoNodeRef}
-        className="video-js"
-        src={proxyUrl}
+        className="video-js "
+        src={movie_url}
         playsInline
         controls
       />

@@ -50,6 +50,7 @@ function HeaderMenu({ categories = [], onMenuSelect }) {
                 className="dropdown-item"
                 onClick={(e) => {
                   e.stopPropagation();
+                  setOpenDropdown(null); // Закрываем дропдаун при клике
                   navigate(`/category${sub.url}`);
                 }}
               >

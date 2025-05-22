@@ -148,31 +148,28 @@ header {
 .dropdown-users-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   margin-bottom: 16px;
 }
 
 .dropdown-user {
   display: flex;
   align-items: center;
-  gap: 8px;
   cursor: pointer;
   padding: 6px;
   transition: background 0.2s ease;
   /* background-color: var(--white-opacity-10); */
-
-  border-bottom: 1px solid var(--white-opacity-10);
 }
 
 .dropdown-user:hover {
-  background-color: var(--white-opacity-20);
+  background-color: var(--white-opacity-10);
   border-radius: 16px;
 }
 
 .dropdown-user-avatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 32px;
 }
 
 .dropdown-button {
@@ -186,24 +183,68 @@ header {
   font-size: 14px;
 }
 
-.dropdown-button.logout {
-  color: #f55;
-}
-
 .header-user__dropdown.under-avatar {
   position: absolute;
   top: calc(100% + 8px); /* нижче аватара */
   right: 0;
-  background: var(--white-opacity-10);
-  backdrop-filter: blur(30px);
+  background: var(--dark-opacity-40);
+  backdrop-filter: blur(100px);
   border-radius: 12px;
   padding: 12px;
   z-index: 999;
-  min-width: 220px;
+  min-width: 400px;
 }
 
 .header-dropdown__user-name {
   font-size: 16px;
   font-weight: 500;
   color: var(--white);
+}
+
+.dropdown-user--active {
+  border-radius: 16px;
+  position: relative;
+  border: none;
+  height: 64px;
+  padding-left: 16px;
+  background-color: var(--white-opacity-10);
+}
+.dropdown-user--active:hover {
+  background-color: var(--blue);
+}
+.user-active-badge {
+  display: none;
+  margin-left: 10px;
+  background: var(--blue, #283de6);
+  color: white;
+  border-radius: 8px;
+  font-size: 12px;
+  padding: 1px 8px;
+  font-weight: 300;
+  letter-spacing: 0.4px;
+}
+
+.dropdown-user--first {
+  display: flex;
+  justify-content: space-between;
+}
+.dropdown-button {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  width: auto;
+  display: inline-block; /* ← для надёжности */
+  font-size: 16px;
+  color: var(--white);
+  background-color: var(--red);
+  border-radius: 8px;
+  font-weight: 600;
+  margin-right: 16px;
+}
+.dropdown-user-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 }
