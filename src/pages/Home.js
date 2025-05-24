@@ -6,6 +6,7 @@ import {
   getMainPage,
   getWatchHistory,
 } from "../api/htttp/hdrezka";
+import { getFeatured } from "../api/utils";
 
 import Header from "../components/Header";
 import HeroSwiper from "../components/HeroSwiper";
@@ -23,6 +24,8 @@ import "../styles/HomePage.css";
 function Home({}) {
   /* ───────── state ───────── */
   const [page, setPage] = useState({});
+  const [featured, setFeatured] = useState([]); // <-- должно быть массивом
+
   const [history, setHistory] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -32,11 +35,12 @@ function Home({}) {
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   /* ───────── hooks ───────── */
-  const session = useLiveSession();
+
   const { movieDetails, loading: movieLoading } = useMovieDetails(
     selectedMovie?.filmLink || selectedMovie?.link
   );
   const currentUser = JSON.parse(localStorage.getItem("current_user"));
+  const session = useLiveSession(Number(currentUser.id));
   /* ───────── handlers ───────── */
   const handleMovieSelect = (movie) => setSelectedMovie(movie);
   const closePopup = () => setSelectedMovie(null);
@@ -85,6 +89,18 @@ function Home({}) {
   useEffect(() => {
     (async () => {
       try {
+        setFeatured(await getFeatured());
+      } catch (e) {
+        console.error("getMainPage error:", e);
+      } finally {
+        setIsPageLoading(false);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
         setHistory(await getWatchHistory(currentUser.id));
       } catch (e) {
         console.error("getWatchHistory error:", e);
@@ -98,7 +114,7 @@ function Home({}) {
   return (
     <>
       {/* задній фон для Hero */}
-      {Array.isArray(history) && history.length > 0 && (
+      {/* {Array.isArray(history) && history.length > 0 && (
         <div
           className="body-backdrop"
           style={{
@@ -107,7 +123,7 @@ function Home({}) {
               : "none",
           }}
         />
-      )}
+      )} */}
 
       {/* popup з деталями */}
       {selectedMovie && (
@@ -128,8 +144,7 @@ function Home({}) {
           onMovieSelect={handleMovieSelect}
         />
 
-        {/* Hero або Live-session */}
-        {session?.id ? (
+        {session ? (
           <KodiLiveSessionPlayer
             session={session}
             history={history}
@@ -139,7 +154,7 @@ function Home({}) {
         ) : (
           <HeroSwiper
             onMovieSelect={handleMovieSelect}
-            history={history}
+            featured={featured}
             onActiveIndexChange={setActiveHeroIdx}
           />
         )}
@@ -149,6 +164,7 @@ function Home({}) {
             Array.isArray(history) &&
             history.length > 0 && (
               <WatchHistory
+                navigate_to="/history"
                 onMovieSelect={handleMovieSelect}
                 history={history}
               />
@@ -157,35 +173,35 @@ function Home({}) {
           {!isPageLoading && (
             <>
               <CollectionsSwiper
-                title="Browse by Collectins"
+                navigate_to="/collections"
+                title="Переглянути за колекціями"
                 data={page.collections}
               />
               <MovieCardSwiper
                 navigate_to="/new"
                 data={page.newest.items}
                 onMovieSelect={handleMovieSelect}
-                title="New Releases"
+                title="Новинки"
               />
 
               <MovieCardSwiper
                 navigate_to="?filter=popular"
                 data={page.popular.items}
                 onMovieSelect={handleMovieSelect}
-                title="Popular"
+                title="Популярні"
               />
               <MovieCardSwiper
                 navigate_to="?filter=watching"
                 data={page.watching.items}
                 onMovieSelect={handleMovieSelect}
-                title="Watching"
+                title="Зараз дивиться"
               />
             </>
           )}
 
-          {/* Простий спінер як заглушка (можеш замінити на Skeleton) */}
           {isPageLoading && (
             <div className="spinner-wrapper">
-              <div className="spinner" />
+              <div className="spinner"></div>
             </div>
           )}
           <Footer />

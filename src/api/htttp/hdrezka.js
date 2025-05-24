@@ -98,3 +98,12 @@ export const getCategories = async () => {
     throw error;
   }
 };
+
+export const getCollections = async (filmLink) => {
+  try {
+    const response = await apiClient.get("get_collections");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

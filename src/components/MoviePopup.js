@@ -112,7 +112,6 @@ const MoviePopup = ({
       onClose();
       await createSession(currentUser.id, {
         movie_id: movieDetails.id,
-        position: 0,
         translator_id: selectedTranslatorId,
         season_id: selectedSeason,
         episode_id: selectedEpisode,
@@ -278,7 +277,7 @@ const MoviePopup = ({
                           className="movie-modal__play-button"
                           onClick={handlePlayBrowser}
                         >
-                          <PlayIcon /> Play
+                          <PlayIcon /> Дивитися
                         </div>
                         <div
                           className="movie-modal__cast-button"
@@ -302,7 +301,7 @@ const MoviePopup = ({
                     </div>
                   </div>
                   <div className="movie-modal__poster-container">
-                    {movieDetails?.trailer ? (
+                    {/* {movieDetails?.trailer ? (
                       <>
                         <div className="movie-modal__youtube-player-container">
                           <div
@@ -337,14 +336,21 @@ const MoviePopup = ({
                           />
                         </div>
                       </>
-                    ) : (
+                    ) : ( */}
+                    <>
+                      <div
+                        className={`youtube-player-overlay ${
+                          isVisible ? "" : "hidden"
+                        }`}
+                      ></div>
                       <div
                         className="movie-modal__poster-vignette"
                         style={{
                           backgroundImage: `url(${movieDetails.image})`,
                         }}
                       ></div>
-                    )}
+                    </>
+                    {/* )} */}
                   </div>
                 </div>
                 <div className="movie-modal__details">
@@ -381,7 +387,7 @@ const MoviePopup = ({
                       <div className="movie-modal_infotable">
                         <div className="movie-modal__infotable-item">
                           <span className="movie-modal__infotable-lable">
-                            Genre:
+                            Жанр:
                           </span>
                           {Array.isArray(movieDetails.genre) ? (
                             movieDetails.genre.length > 1 ? (
@@ -409,7 +415,7 @@ const MoviePopup = ({
                         </div>
                         <div className="movie-modal__infotable-item">
                           <span className="movie-modal__infotable-lable">
-                            Country:
+                            Країна:
                           </span>
                           {Array.isArray(movieDetails.country) ? (
                             movieDetails.country.length > 1 ? (
@@ -437,7 +443,7 @@ const MoviePopup = ({
                         </div>
                         <div className="movie-modal__infotable-item">
                           <span className="movie-modal__infotable-lable">
-                            Director:
+                            Режисер:
                           </span>
                           {Array.isArray(movieDetails.director) ? (
                             movieDetails.director.length > 1 ? (
@@ -467,7 +473,7 @@ const MoviePopup = ({
                     </div>
                     <div className="movie-modal__translators">
                       <span className="movie-modal__section-title">
-                        Voiceover
+                        Озвучка
                       </span>
                       <div className="movie-modal__translators-container">
                         {movieDetails.translator_ids.map((translator) => (

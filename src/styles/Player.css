@@ -369,6 +369,27 @@
   align-items: center;
   justify-content: center;
 }
+.web-player-top {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  z-index: 10000;
+  gap: 16px;
+  display: flex;
+  align-items: center;
+  /* background-color: var(--white-opacity-10); */
+  /* backdrop-filter: blur(20px); */
+
+  border-radius: 16px;
+  overflow: hidden;
+}
+.player-back_icon {
+}
+.web-player_title {
+  color: var(--white);
+  font-weight: 500;
+  font-size: 32px;
+}
 
 /* Стилизация Video.js плеера */
 .video-js.custom-theme {
@@ -381,15 +402,15 @@
 
 /* Панель управления */
 .video-js.custom-theme .vjs-control-bar {
-  background: var(--dark-opacity-50);
-  backdrop-filter: blur(10px);
+  background: none;
+
   height: 80px;
   padding: 0 32px;
   align-items: center;
   justify-content: center;
   gap: 24px;
   position: fixed;
-  width: 90%;
+  width: 100%;
   left: 50%;
   transform: translateX(-50%);
   bottom: 32px;
@@ -411,7 +432,7 @@
   width: 64px;
 }
 .video-js.custom-theme .vjs-button:hover {
-  color: var(--white-opacity-70);
+  color: var(--blue);
 }
 .vjs-icon-placeholder:before {
   content: "\f103";
@@ -425,13 +446,15 @@
 }
 
 .video-js.custom-theme .vjs-play-progress {
+  border-radius: 20px;
+  height: 14px;
   background-color: var(--red);
 }
 .video-js.custom-theme .vjs-load-progress {
-  background-color: rgba(255, 255, 255, 0.2);
+  /* background-color: var(--white-opacity-10); */
 }
 .video-js.custom-theme .vjs-progress-holder {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--white-opacity-10);
   border-radius: 4px;
 }
 /* Кнопки (play, volume, etc.) */
@@ -486,8 +509,6 @@
 @media (max-width: 600px) {
   /* Панель управления */
   .video-js.custom-theme .vjs-control-bar {
-    background: var(--white-opacity-10);
-    backdrop-filter: blur(10px);
     height: 80px;
     padding: 0 16px;
     align-items: center;
@@ -495,10 +516,62 @@
     gap: 4px;
     position: absolute;
     width: 100%;
-    bottom: 0;
+
     border-radius: 0;
   }
   .video-js.custom-theme .vjs-button {
     font-size: 16px; /* Размер иконок */
   }
+  .web-player-top {
+    left: 16px;
+  }
+  .web-player_title {
+    font-size: 24px;
+  }
+  .web-player-top svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+.web-player-container_error {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.web-player-container_error-content {
+  padding: 32px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+}
+.web-player-container_error h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ff4a4a;
+  margin-bottom: 8px;
+}
+.web-player-container_error p {
+  line-height: 1.5;
+  color: #8d8d8d;
+  max-width: 400px;
+  margin-bottom: 32px;
+}
+.web-player-container_error-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background-color: var(--white-opacity-10);
+  color: var(--white);
+  outline: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 100;
+  cursor: pointer;
+  border-radius: 16px;
 }

@@ -1,12 +1,23 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import VideoCard from "./VideoCard";
+import { useNavigate } from "react-router-dom";
 import "swiper/css";
 
-function WatchHistory({ onMovieSelect, history }) {
+function WatchHistory({ navigate_to, onMovieSelect, history }) {
+  const navigate = useNavigate();
+
   return (
     <div className="explorer_watch-history">
-      <span className="row-header-title">History</span>
+      <span
+        onClick={(e) => {
+          e.stopPropagation();
+          navigate(`${navigate_to}`);
+        }}
+        className="row-header-title"
+      >
+        Історія переглядів
+      </span>
       <Swiper
         style={{ marginTop: "20px" }}
         spaceBetween={20}

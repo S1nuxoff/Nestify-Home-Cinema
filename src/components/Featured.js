@@ -6,7 +6,7 @@ import ReactPlayer from "react-player/youtube";
 import "../styles/Player.css";
 import "swiper/css";
 
-function ContinueWatch({ onMovieSelect, movie, isActive, resetTrigger }) {
+function Featured({ onMovieSelect, movie, isActive, resetTrigger }) {
   const [isMuted, setIsMuted] = useState(true);
   const [posterVisible, setPosterVisible] = useState(true);
   const [trailerVisible, setTrailerVisible] = useState(false);
@@ -98,6 +98,7 @@ function ContinueWatch({ onMovieSelect, movie, isActive, resetTrigger }) {
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
+
                   zIndex: 2,
                 }}
               />
@@ -159,7 +160,7 @@ function ContinueWatch({ onMovieSelect, movie, isActive, resetTrigger }) {
         }}
       >
         <div className="continue-content-top">
-          <span className="continue-status-text">Continue Watching</span>
+          <span className="continue-status-text">Зараз у Тренді</span>
         </div>
         <span></span>
         <div className="continue-content-bottom">
@@ -194,7 +195,7 @@ function ContinueWatch({ onMovieSelect, movie, isActive, resetTrigger }) {
             className="continue__play-button"
             onClick={() => onMovieSelect(movie)}
           >
-            <PlayIcon /> Play
+            <PlayIcon /> Дивитися
           </div>
         </div>
       </div>
@@ -202,4 +203,4 @@ function ContinueWatch({ onMovieSelect, movie, isActive, resetTrigger }) {
   );
 }
 
-export default ContinueWatch;
+export default Featured;

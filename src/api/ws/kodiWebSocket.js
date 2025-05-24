@@ -1,5 +1,5 @@
 import config from "../../core/config";
-
+import { deleteSession } from "../../api/session";
 class Emitter {
   constructor() {
     this.handlers = {};
@@ -21,7 +21,7 @@ class Emitter {
     this.handlers[eventName].forEach((cb) => cb(data));
   }
 }
-
+const currentUser = JSON.parse(localStorage.getItem("current_user"));
 const emitter = new Emitter();
 const KODI_WS_URL = config.kodi_url;
 
@@ -111,24 +111,9 @@ const kodiWebSocket = {
     if (data.method === "Player.OnStop") {
       this.playerId = null;
       emitter.emit("playerIdChange", this.playerId);
-
-      // Отправка HTTP-запроса при остановке плеера
-      fetch(`${config.backend_url}/api/v1/session/remove`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ reason: "player_stopped" }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            console.error(
-              "Failed to notify session removal:",
-              response.statusText
-            );
-          } else {
-            console.log("Session removal notified successfully.");
-          }
+      deleteSession(currentUser.id)
+        .then(() => {
+          console.log("Session removal notified successfully.");
         })
         .catch((error) => {
           console.error("Error notifying session removal:", error);
@@ -256,4 +241,26 @@ const kodiWebSocket = {
   },
 };
 
+const waitForPlayerOnPlay = (timeout = 4000) => {
+  return new Promise((resolve, reject) => {
+    let timer = null;
+
+    const handler = (data) => {
+      if (data.method === "Player.OnPlay") {
+        clearTimeout(timer);
+        kodiWebSocket.off("notification", handler);
+        resolve(true);
+      }
+    };
+
+    kodiWebSocket.on("notification", handler);
+
+    timer = setTimeout(() => {
+      kodiWebSocket.off("notification", handler);
+      reject(new Error("Kodi не начал воспроизведение"));
+    }, timeout);
+  });
+};
+
 export default kodiWebSocket;
+export { waitForPlayerOnPlay };

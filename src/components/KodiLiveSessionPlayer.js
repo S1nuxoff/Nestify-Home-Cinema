@@ -10,24 +10,28 @@ function KodiLiveSessionPlayer({ session, onMovieSelect }) {
     <div className="player-container">
       <div className="player-preview-wrapper">
         <div className="preview-overlay"></div>
-        <img src={session.image} alt="Preview" className="preview-image" />
+        <img
+          src={session.movie.image}
+          alt="Preview"
+          className="preview-image"
+        />
       </div>
 
       <div className="player-content">
         <div className="player-content-top">
-          <span className="player-status-text">Now Playing</span>
+          <span className="player-status-text">Зараз відтворюється</span>
           <More onClick={() => onMovieSelect(session)} />
         </div>
         <div className="player-content-bottom">
           <div className="player-info" onClick={() => onMovieSelect(session)}>
-            <span className="player-title">{session.title}</span>
+            <span className="player-title">{session.movie.title}</span>
             <span className="player-sub_title">
               <span className="player-sub_title-origin-name">
-                {session.origin_name}
+                {session.movie.origin_name}
               </span>
               {session.season_id && session.episode_id && (
                 <span className="player-sub_title-episodes">
-                  | Season {session.season_id}, Episode {session.episode_id}{" "}
+                  | Cезон {session.season_id}, Серія {session.episode_id}{" "}
                 </span>
               )}
             </span>

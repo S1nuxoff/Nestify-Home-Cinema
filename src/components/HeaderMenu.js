@@ -4,16 +4,9 @@ import "../styles/HeaderMenu.css";
 
 function HeaderMenu({ categories = [], onMenuSelect }) {
   const navigate = useNavigate();
-  const nav = useNavigate();
   const [openDropdown, setOpenDropdown] = useState(null);
   const menuRef = useRef();
 
-  const go = (url) => {
-    if (onMenuSelect) onMenuSelect(url);
-    else nav(url);
-  };
-
-  // Закриття при кліку поза меню
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {

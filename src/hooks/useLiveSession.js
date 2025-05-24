@@ -1,18 +1,19 @@
 // hooks/useLiveSession.js
 import { useState, useEffect } from "react";
-
-const WS_URL = "ws://212.162.155.61:8000/ws/live_session";
-
-const useLiveSession = () => {
+import config from "../core/config";
+const useLiveSession = (userId) => {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
-    const ws = new WebSocket(WS_URL);
+    if (!userId) return; // не подключаться без юзера
+    const ws = new WebSocket(
+      `ws://212.162.155.61:8000/ws/live_session/${userId}`
+    );
 
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        setSession(data); // 👈 Прямо то, что пришло от сервера
+        setSession(data.live_session || null); // сразу достаём только live_session
       } catch (err) {
         console.error("WS parse error:", err);
       }
@@ -23,7 +24,8 @@ const useLiveSession = () => {
     ws.onclose = () => console.warn("[HomeRezka WS] Disconnected");
 
     return () => ws.close();
-  }, []);
+  }, [userId]);
+
   return session;
 };
 

@@ -26,3 +26,12 @@ export const getUsers = async () => {
     throw error;
   }
 };
+
+export const getFeatured = async () => {
+  try {
+    const response = await UtilsApiClient.get("/featured");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

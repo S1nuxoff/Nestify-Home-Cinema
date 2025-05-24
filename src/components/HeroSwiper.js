@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-
 import { Swiper, SwiperSlide } from "swiper/react";
-import ContinueWatch from "../components/ContinueWatch";
+import Featured from "../components/Featured";
 
-function HeroSwiper({ onMovieSelect, history, onActiveIndexChange }) {
+function HeroSwiper({ onMovieSelect, featured, onActiveIndexChange }) {
   const [activeIndex, setActiveIndex] = useState(0);
   return (
     <Swiper
@@ -19,10 +18,10 @@ function HeroSwiper({ onMovieSelect, history, onActiveIndexChange }) {
         clickable: true, // делает точки кликабельными
       }}
     >
-      {history &&
-        history.map((movie, idx) => (
+      {featured &&
+        featured.map((movie, idx) => (
           <SwiperSlide key={`${movie.id}-${idx}`}>
-            <ContinueWatch
+            <Featured
               movie={movie}
               onMovieSelect={onMovieSelect}
               isActive={idx === activeIndex}

@@ -18,7 +18,13 @@ function getReadableType(type) {
 
 function VideoCard({ movie, onMovieSelect, type }) {
   return (
-    <div className="video-card-container" onClick={() => onMovieSelect(movie)}>
+    <div
+      className={
+        "video-card-container" +
+        (type === "explorer-card" ? " video-card-container-explorer" : "")
+      }
+      onClick={() => onMovieSelect(movie)}
+    >
       <div
         className={
           `video-card-preview-wrapper` +

@@ -13,7 +13,7 @@ function CollectionCard({ collection }) {
         navigate(`/category/${collection.navigate_to}`);
       }}
     >
-      <div className="video-card-preview-wrapper">
+      <div className="video-card-preview-wrapper-explorer">
         <img
           src={`${config.backend_url}${collection.local_url}`}
           alt="collection"

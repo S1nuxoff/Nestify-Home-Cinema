@@ -9,3 +9,15 @@ export const createSession = async (userId, payload) => {
     body: JSON.stringify(payload),
   });
 };
+
+export const deleteSession = async (userId) => {
+  return fetch(
+    `${config.backend_url}/api/v1/session/remove?user_id=${userId}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};

@@ -1,9 +1,9 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
+import { ReactComponent as BackIcon } from "../assets/icons/player_back_icon.svg";
 
-import config from "../core/config";
 import "../styles/Player.css";
 import { getProgress, saveProgress } from "../api/hdrezka/progressApi";
 
@@ -19,8 +19,8 @@ export default function Player() {
   const playerRef = useRef(null); // video.js Player inst
   const timerRef = useRef(null);
   const [startPos, setStartPos] = useState(null);
-
-  /* 1. GET /progress */
+  const navigate = useNavigate();
+  console.log(movieDetails);
   useEffect(() => {
     if (!movieDetails || !movie_url) return;
     (async () => {
@@ -161,18 +161,48 @@ export default function Player() {
     };
   }, []);
 
-  if (!movieDetails || !movie_url) return <p>Дані відсутні…</p>;
-  const proxyUrl = `${config.backend_url}/proxy?url=${movie_url}`;
+  if (!movieDetails || !movie_url)
+    return (
+      <div className="container">
+        <div className="web-player-container_error">
+          <div className="web-player-container_error-content">
+            <h2>Ooops.. 404</h2>
+            <p>
+              Не вдалося завантажити дані для цього фільму. Можливо, сторінку
+              було відкрито напрям
+            </p>
+            <button
+              onClick={() => navigate("/")}
+              className="web-player-container_error-btn"
+            >
+              <BackIcon />
+              На головну
+            </button>
+          </div>
+        </div>
+        <div className="background-blur-100"></div>
+        <div className="background-glow-center-red"></div>
+      </div>
+    );
 
   return (
-    <div className="web-player-container">
-      <video
-        ref={videoNodeRef}
-        className="video-js "
-        src={movie_url}
-        playsInline
-        controls
-      />
-    </div>
+    <>
+      <div className="web-player-container">
+        <div className="web-player-top">
+          <BackIcon
+            className="player-back_icon"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/")}
+          />
+          <span className="web-player_title">{movieDetails.title}</span>
+        </div>
+        <video
+          ref={videoNodeRef}
+          className="video-js vjs-custom-theme"
+          src={movie_url}
+          playsInline
+        />
+      </div>
+    </>
   );
 }

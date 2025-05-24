@@ -14,7 +14,7 @@ function CollectionsSwiper({ data, title, navigate_to }) {
         className="movie_card_swiper_title-container"
         onClick={(e) => {
           e.stopPropagation();
-          navigate(`/category${navigate_to}`);
+          navigate(`${navigate_to}`);
         }}
       >
         <span className="row-header-title">{title}</span>

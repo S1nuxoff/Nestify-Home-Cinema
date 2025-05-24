@@ -50,7 +50,7 @@ function Search({ onMovieSelect }) {
           ref={inputRef}
           type="search"
           className="hdrezka-header-search-input"
-          placeholder="Search movies, tv shows..."
+          placeholder="Шукайте фільми, серіали..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}

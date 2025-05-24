@@ -21,6 +21,8 @@ function Category({}) {
     selectedMovie?.filmLink || selectedMovie?.link
   );
   const currentUser = JSON.parse(localStorage.getItem("current_user"));
+  const [isLoading, setIsLoading] = useState(true);
+
   // 🎯 шлях на бекенд: після "/category", включаючи page/X/
   const backendPath = location.pathname
     .replace(/^\/category/, "")
@@ -59,6 +61,21 @@ function Category({}) {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true); // ⬅️ показать спиннер
+      try {
+        const data = await getPage(fullUrl);
+        setPageData(data);
+      } catch (err) {
+        console.error("Error fetching category page:", err);
+      } finally {
+        setIsLoading(false); // ⬅️ скрыть спиннер
+      }
+    };
+
+    fetchData();
+  }, [location.pathname]);
 
   return (
     <>
@@ -78,26 +95,34 @@ function Category({}) {
           onMovieSelect={setSelectedMovie}
           currentUser={currentUser}
         />
-        <div className="category-content">
-          <div className="category-content-top">
-            <div className="category-content-title">
-              <BackIcon
-                style={{ cursor: "pointer" }}
-                onClick={() => navigate("/")}
-              />
-
-              <span className="row-header-title">{pageData.title}</span>
+        <>
+          {isLoading ? (
+            <div className="spinner-wrapper">
+              <div className="spinner"></div>
             </div>
-          </div>
+          ) : (
+            <div className="category-content">
+              <div className="category-content-top">
+                <div className="category-content-title">
+                  <BackIcon
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate(-1)} // ⬅ назад в истории
+                  />
 
-          <Explorer
-            Page={pageData.items}
-            title={null}
-            currentUser={currentUser}
-            onMovieSelect={setSelectedMovie}
-          />
-          <Pagination totalPages={pageData.pages_count} baseUrl={baseUrl} />
-        </div>
+                  <span className="row-header-title">{pageData.title}</span>
+                </div>
+              </div>
+
+              <Explorer
+                Page={pageData.items}
+                title={null}
+                currentUser={currentUser}
+                onMovieSelect={setSelectedMovie}
+              />
+              <Pagination totalPages={pageData.pages_count} baseUrl={baseUrl} />
+            </div>
+          )}
+        </>
         <Footer />
       </div>
     </>

@@ -1,6 +1,6 @@
 // src/hooks/useMovieSource.js
 import { getSource } from "../api/htttp/hdrezka";
-import kodiWebSocket from "../api/ws/kodiWebSocket";
+import kodiWebSocket, { waitForPlayerOnPlay } from "../api/ws/kodiWebSocket"; // 👈
 
 const useMovieSource = () => {
   const playMovieSource = async ({
@@ -52,7 +52,15 @@ const useMovieSource = () => {
           ];
         if (lastSource && lastSource.url) {
           kodiWebSocket.openFile(lastSource.url);
-          return true; // Успешно открыло видео
+
+          // Дожидаемся Player.OnPlay
+          try {
+            await waitForPlayerOnPlay(4000); // 4 секунды
+            return true; // Всё ок — воспроизведение началось
+          } catch (err) {
+            console.error("Kodi не начал воспроизведение:", err);
+            return false;
+          }
         } else {
           console.error("URL не найден в последнем источнике", lastSource);
           return false;

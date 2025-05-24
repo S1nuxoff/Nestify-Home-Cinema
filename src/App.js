@@ -4,16 +4,19 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import SearchPage from "./pages/SearchPage";
 import Category from "./pages/Category";
-
+import HistoryPage from "./pages/HistoryPage";
 // import Series from "./pages/Series";
 // import Films from "./pages/Films";
 import Login from "./pages/Login";
 import Player from "./pages/Player";
 import CreateUser from "./pages/CreateUser";
 import kodiWebSocket from "./api/ws/kodiWebSocket";
+import CollectionsPage from "./pages/CollectionsPage";
 import HaPlayer from "./pages/HaPlayer";
 import PrivateRoute from "./components/PrivateRoute";
 import "./styles/App.css";
+import "@vidstack/react/player/styles/default/theme.css";
+import "@vidstack/react/player/styles/default/layouts/video.css";
 
 function App() {
   const currentUser = JSON.parse(localStorage.getItem("current_user"));
@@ -66,6 +69,22 @@ function App() {
             element={
               <PrivateRoute>
                 <Category currentUser={currentUser} />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/collections"
+            element={
+              <PrivateRoute>
+                <CollectionsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              <PrivateRoute>
+                <HistoryPage />
               </PrivateRoute>
             }
           />
